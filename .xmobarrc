@@ -1,0 +1,19 @@
+Config { font = "-*-Fixed-Bold-R-Normal-*-14-*-*-*-*-*-*-*"
+       , bgColor = "black"
+       , fgColor = "grey"
+       , position = Top
+       , lowerOnStart = True
+       , border = NoBorder
+       , borderColor = "black"
+       , commands = [ Run Weather "EGPF" ["-t"," <tempF>F","-L","64","-H","77","--normal","green","--high","red","--low","lightblue"] 36000
+                    , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
+                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+                    , Run Swap [] 10
+                    , Run Date "%a %b %_d %l:%M %p" "date" 10
+                    , Run StdinReader
+                    , Run Com "setxkbmap -query | gawk '/layout.*/ { print $2 }'" [] "keyboard" 10
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "%StdinReader% }{ %cpu% | %memory% * %swap%    <fc=#ee9a00>%date%</fc> | %keyboard% | %EGPF%"
+       }
