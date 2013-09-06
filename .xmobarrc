@@ -11,7 +11,7 @@ Config { font = "-*-Fixed-Bold-R-Normal-*-14-*-*-*-*-*-*-*"
                     , Run Swap [] 10
                     , Run Date "%a %b %_d %l:%M %p" "date" 10
                     , Run StdinReader
-                    , Run Com "setxkbmap -query | gawk '/layout.*/ { print $2 }'" [] "keyboard" 10
+                    , Run Com "setxkbmap -query | awk '/layout.*/ { print $2 }'" [] "keyboard" 10
                     , Run BatteryP ["BAT0", "BAT1"]
                       ["-t", "<acstatus>, <timeleft> (<left>%)", "-l", "red", "-h", "green"] 10
                     ]

@@ -17,6 +17,6 @@ main = do
                          , terminal = "xterm"
                          } `additionalKeys`
     [ ((controlMask, xK_Shift_L),
-      spawn "~/layout_switch.sh")
+      spawn "~/scripts/layout_switch.sh")
     , ((mod4Mask .|. shiftMask, xK_l), spawn "xscreensaver-command -lock")
     ]
