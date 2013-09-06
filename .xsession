@@ -11,7 +11,7 @@ killall gnome-screensaver
 
 WALLPAPER="${HOME}/Pictures/wallpaper.png"
 if [ -e "${WALLPAPER}" ] && [ -f "${WALLPAPER}" ]; then
-    xloadimage -onroot -fullscreen -border black "${WALLPAPER}"
+    xloadimage -onroot -center -border black "${WALLPAPER}"
 fi
 xscreensaver -no-splash &
 
