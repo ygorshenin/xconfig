@@ -3,4 +3,4 @@
 set -e
 set -x
 
-sudo apt-get install -y xmonad xmobar fonts-inconsolata
+sudo apt-get install -y xmonad xmobar fonts-inconsolata xloadimage

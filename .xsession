@@ -7,7 +7,12 @@ xrdb -merge .Xresources
 xsetroot -solid black
  
 # Fire up apps
-killall gnome-screensaver 
+killall gnome-screensaver
+
+WALLPAPER="${HOME}/Pictures/wallpaper.png"
+if [ -e "${WALLPAPER}" ] && [ -f "${WALLPAPER}" ]; then
+    xloadimage -onroot -fullscreen -border black "${WALLPAPER}"
+fi
 xscreensaver -no-splash &
 
 function spawn_pipe() {
