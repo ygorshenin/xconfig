@@ -1,21 +1,13 @@
 #!/bin/bash
 
 usage() {
-    echo "Usage: $0 [--no-xmonad] [--no-xmobar] [--no-scripts] [-v|--verbose] [-h|--help]"
+    echo "Usage: $0 [-v|--verbose] [-h|--help]"
     echo "Options:"
-    echo "--no-xmonad        don't install xmonad configuration files"
-    echo "--no-xmobar        don't install xmobar configuration files"
-    echo "--no-xsession      don't install xsession configuration files"
-    echo "--no-scripts       don't install scripts"
     echo "--verbose          show all actions"
     echo "--help             show this help message"
 }
 
 verbose=
-no_xmonad=
-no_xmobar=
-no_xsession=
-no_scripts=
 help=
 
 process_opts() {
@@ -23,18 +15,6 @@ process_opts() {
         case "${opt}" in
             -v|--verbose)
                 verbose=true
-                ;;
-            --no-xmonad)
-                no_xmonad=true
-                ;;
-            --no-xmobar)
-                no_xmobar=true
-                ;;
-            --no-xsession)
-                no_xsession=true
-                ;;
-            --no-scripts)
-                no_scripts=true
                 ;;
             -h|--help)
                 help=true
@@ -84,36 +64,28 @@ if [ ! -z "${help}" ]; then
     exit 0
 fi
 
-if [ -z "${no_xmonad}" ]; then
-    log info "Installing xmonad config..."
-    if ! cp -R ${XMONAD_PATH} ${HOME}; then
-        log error "Can't install xmonad config, aborting."
-        exit -1
-    fi
+log info "Installing xmonad config..."
+if ! cp -R ${XMONAD_PATH} ${HOME}; then
+    log error "Can't install xmonad config, aborting."
+    exit -1
 fi
 
-if [ -z "${no_xmobar}" ]; then
-    log info "Installing xmobar config..."
-    if ! cp ${XMOBAR_PATH} ${HOME}; then
-        log error "Can't install xmobar config, aborting."
-        exit -1
-    fi
+log info "Installing xmobar config..."
+if ! cp ${XMOBAR_PATH} ${HOME}; then
+    log error "Can't install xmobar config, aborting."
+    exit -1
 fi
 
-if [ -z "${no_xsession}" ]; then
-    log info "Installing xsession config..."
-    if ! cp ${XRESOURCES_PATH} ${XSESSION_PATH} ${HOME}; then
-        log error "Can't install xsession config..."
-        exit -1
-    fi
+log info "Installing xsession config..."
+if ! cp ${XRESOURCES_PATH} ${XSESSION_PATH} ${HOME}; then
+    log error "Can't install xsession config..."
+    exit -1
 fi
 
-if [ -z "${no_scripts}" ]; then
-    log info "Installing scripts..."
-    if ! cp -R ${SCRIPTS_PATH} ${HOME}; then
-        log error "Can't install scripts, aborting."
-        exit -1
-    fi
+log info "Installing scripts..."
+if ! cp -R ${SCRIPTS_PATH} ${HOME}; then
+    log error "Can't install scripts, aborting."
+    exit -1
 fi
 
 exit 0

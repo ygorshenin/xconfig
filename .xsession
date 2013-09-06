@@ -10,4 +10,14 @@ xsetroot -solid black
 killall gnome-screensaver 
 xscreensaver -no-splash &
 
+function spawn_pipe() {
+    local pipe="$1"
+    rm -rf "${pipe}"
+    mkfifo "${pipe}"
+    echo "--" >"${pipe}" &
+}
+
+spawn_pipe "/tmp/.layout"
+spawn_pipe "/tmp/.volume"
+
 exec xmonad
