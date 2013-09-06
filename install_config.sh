@@ -76,6 +76,7 @@ ROOT_DIR=$(dirname "$(realpath $0)")
 XMONAD_PATH=${ROOT_DIR}/.xmonad
 XMOBAR_PATH=${ROOT_DIR}/.xmobarrc
 XRESOURCES_PATH=${ROOT_DIR}/.Xresources
+XSESSION_PATH=${ROOT_DIR}/.xsession
 SCRIPTS_PATH=${ROOT_DIR}/scripts
 
 if [ ! -z "${help}" ]; then
@@ -101,7 +102,7 @@ fi
 
 if [ -z "${no_xsession}" ]; then
     log info "Installing xsession config..."
-    if ! cp ${XRESOURCES_PATH} ${HOME}; then
+    if ! cp ${XRESOURCES_PATH} ${XSESSION_PATH} ${HOME}; then
         log error "Can't install xsession config..."
         exit -1
     fi

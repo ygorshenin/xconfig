@@ -5,17 +5,17 @@ Config { font = "-*-Fixed-Bold-R-Normal-*-14-*-*-*-*-*-*-*"
        , lowerOnStart = True
        , border = NoBorder
        , borderColor = "black"
-       , commands = [ Run Weather "EGPF" ["-t"," <tempF>F","-L","64","-H","77","--normal","green","--high","red","--low","lightblue"] 36000
-                    , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
+       , commands = [ Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
                     , Run Memory ["-t","Mem: <usedratio>%"] 10
                     , Run Swap [] 10
                     , Run Date "%a %b %_d %l:%M %p" "date" 10
                     , Run StdinReader
-                    , Run Com "setxkbmap -query | awk '/layout.*/ { print $2 }'" [] "keyboard" 10
+                    , Run PipeReader "/tmp/.layout" "layout"
+                    , Run PipeReader "/tmp/.volume" "sound"
                     , Run BatteryP ["BAT0", "BAT1"]
                       ["-t", "<acstatus>, <timeleft> (<left>%)", "-l", "red", "-h", "green"] 10
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %cpu% | %memory% * %swap%    <fc=#ee9a00>%date%</fc> | %keyboard% | %battery% | %EGPF%"
+       , template = "%StdinReader% }{ %cpu% | %memory% * %swap% | Vol: %sound% | %battery% | %layout% | <fc=#ee9a00>%date%</fc>"
        }
