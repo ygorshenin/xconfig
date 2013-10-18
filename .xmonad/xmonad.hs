@@ -18,11 +18,18 @@ switchVolume :: MonadIO m => VolumeCommand -> m ()
 switchVolume cmd = spawn $ "~/scripts/volume_switch.sh" ++ " " ++ arg
   where arg = map toLower $ show cmd
 
+workWorkspaces    = ["0x1:code", "0x2:code", "0x3:web"]
+genericWorkspaces = map (\d -> "0x" ++ (show d) ++ ":generic") [4..8]
+mediaWorkspaces   = ["0x9:media"]
+myWorkspaces = concat [workWorkspaces, genericWorkspaces, mediaWorkspaces]
+
 main = do
   xmobar <- spawnPipe "xmobar"
-  let layout = onWorkspace "9" (noBorders $ Full) . avoidStruts $
-               layoutHook defaultConfig
+  let layout = onWorkspaces mediaWorkspaces (noBorders $ Full) $
+               avoidStruts .
+               smartBorders $ layoutHook defaultConfig
   xmonad $ defaultConfig { manageHook = manageDocks <+> manageHook defaultConfig
+                         , workspaces = myWorkspaces
                          , layoutHook = layout
                          , logHook = dynamicLogWithPP xmobarPP
                              { ppOutput = hPutStrLn xmobar
