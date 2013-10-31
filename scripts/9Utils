@@ -1,0 +1,22 @@
+#!/bin/bash
+
+r() {
+  9p read "acme/$winid/$1"
+}
+
+w() {
+  9p write "acme/$winid/$1"
+}
+
+ctl() {
+  echo -n "$@" | w ctl
+}
+
+die() {
+  echo "Error: $@. Aborted." >2 1>&2
+  exit 1
+}
+
+filename() {
+  r tag | sed -n 's/^[ 	]*\([^ 	]\+\).*/\1/p'
+}

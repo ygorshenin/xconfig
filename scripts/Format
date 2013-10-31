@@ -1,0 +1,35 @@
+#!/bin/bash
+
+set -e
+
+source 9Utils
+
+clang-fmt() {
+  which clang-format > /dev/null 2>&1
+  if [ "$?" -ne 0 ]; then
+      die "can't find clang-format utility"
+  fi
+  echo -n ',' | w addr
+  r body | clang-format -style=Chromium | w data
+  return 0
+}
+
+generic-fmt() {
+  echo -n ',' | w addr
+  r body | awk -v f="$1" 'length($0) > 80 { printf("%s:%d: line too long\n", f, NR) }'
+}
+
+readonly FILENAME=$(filename)
+
+case "${FILENAME}" in
+    *.c)
+        clang-fmt
+        ;;
+    *.cc)
+        clang-fmt
+        ;;
+    *)
+        ;;
+esac
+
+generic-fmt "${FILENAME}"

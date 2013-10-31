@@ -1,0 +1,42 @@
+#!/bin/bash
+
+set -e
+
+source 9Utils
+
+readonly FILENAME=$(filename)
+
+if [ ! -e ${FILENAME} ] || [ ! -f ${FILENAME} ]; then
+  die "can't find file"
+fi
+
+readonly TARGET=$(echo ${FILENAME} | sed -n 's/^\(.*\)\..*$/\1/p')
+
+case "${FILENAME}" in
+	*.c)
+		COMPILER=gcc
+		if [ -z ${TARGET} ]; then
+		  die "can't generate target for ${FILENAME}"
+		fi
+		OPTIONS="-g -Wall -pedantic -o ${TARGET}"
+		;;
+	*.cc)
+		COMPILER=g++
+		if [ -z ${TARGET} ]; then
+		  die "can't generate target for ${FILENAME}"
+		fi
+		OPTIONS="-g -Wall -pedantic -o ${TARGET}"
+		;;
+	*.java)
+		COMPILER=javac
+		;;
+	*.hs)
+		COMPILER=ghc
+		;;
+	*)
+		die "no known compiler for ${FILENAME}"
+		;;
+esac
+
+echo "Compiling ${FILENAME}..."
+${COMPILER} ${OPTIONS} ${FILENAME} && echo "Done"
