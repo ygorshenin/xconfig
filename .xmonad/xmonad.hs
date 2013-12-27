@@ -12,10 +12,10 @@ data VolumeCommand = Lower | Raise | Toggle
                    deriving (Show)
 
 switchLayout :: MonadIO m => m ()
-switchLayout = spawn "~/scripts/layout_switch.sh"
+switchLayout = spawn "~/bin/layout-switch"
 
 switchVolume :: MonadIO m => VolumeCommand -> m ()
-switchVolume cmd = spawn $ "~/scripts/volume_switch.sh" ++ " " ++ arg
+switchVolume cmd = spawn $ "~/bin/volume-switch" ++ " " ++ arg
   where arg = map toLower $ show cmd
 
 workWorkspaces    = ["0x1:code", "0x2:code", "0x3:web"]
