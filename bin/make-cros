@@ -1,0 +1,4 @@
+#!/bin/bash
+
+PATH=${HOME}/bin:${PATH}
+PATH=$PATH LD=/usr/bin/gold ninja -C out_${SDK_BOARD}/Release -j500 chrome chrome_sandbox nacl_helper | ninja-filter

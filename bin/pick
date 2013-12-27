@@ -1,0 +1,14 @@
+#!/bin/bash
+
+PATH=/bin:/usr/bin
+
+for i in "$@"
+do
+  echo -n "$i [Y/n]? " >/dev/tty
+  read ans </dev/tty
+  case "$ans" in
+    [Yy]*) echo "$i" ;;
+       "") echo "$i" ;;
+        *) ;;
+  esac
+done

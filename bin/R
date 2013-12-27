@@ -1,0 +1,15 @@
+#!/bin/bash
+echo "$samfile" | sed -n '
+/\.cc$/ {
+  s/\.cc$/.h/p
+  d
+}
+/\.h$/ {
+  s/\.h$/.cc/p
+  d
+}
+/\./ {
+  p
+  d
+}
+' | xargs plumb

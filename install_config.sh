@@ -57,7 +57,7 @@ XMONAD_PATH=${ROOT_DIR}/.xmonad
 XMOBAR_PATH=${ROOT_DIR}/.xmobarrc
 XRESOURCES_PATH=${ROOT_DIR}/.Xresources
 XSESSION_PATH=${ROOT_DIR}/.xsession
-SCRIPTS_PATH=${ROOT_DIR}/scripts
+BIN_PATH=${ROOT_DIR}/bin
 
 if [ ! -z "${help}" ]; then
     usage
@@ -82,9 +82,9 @@ if ! cp ${XRESOURCES_PATH} ${XSESSION_PATH} ${HOME}; then
     exit -1
 fi
 
-log info "Installing scripts..."
-if ! cp -R ${SCRIPTS_PATH} ${HOME}; then
-    log error "Can't install scripts, aborting."
+log info "Installing bin..."
+if ! cp -R ${BIN_PATH} ${HOME}; then
+    log error "Can't install bin, aborting."
     exit -1
 fi
 

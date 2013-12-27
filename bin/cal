@@ -1,0 +1,29 @@
+#!/bin/bash
+
+case $# in
+  0) set `date +"%b %Y"`; m=$1; y=$2 ;;
+  1) m=$1; set `date +%Y`; y=$1 ;;
+  *) m=$1; y=$2 ;;
+esac
+
+m=$(echo "$m" | tr A-Z a-z)
+
+case "$m" in
+  jan*) m=1 ;;
+  feb*) m=2 ;;
+  mar*) m=3 ;;
+  apr*) m=4 ;;
+  may*) m=5 ;;
+  jun*) m=6 ;;
+  jul*) m=7 ;;
+  aug*) m=8 ;;
+  sep*) m=9 ;;
+  oct*) m=10 ;;
+  nov*) m=11 ;;
+  dec*) m=12 ;;
+  0)    m=1 ;;
+  [1-9]|10|11|12) ;;
+  *)    y=$m; m="" ;;
+esac
+
+/usr/bin/cal $m $y

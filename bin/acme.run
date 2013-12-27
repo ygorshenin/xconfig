@@ -1,0 +1,3 @@
+#!/bin/bash
+acme -f /mnt/font/Inconsolata/16a/font -a $@
+

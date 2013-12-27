@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo "Compiling $@..."
+path=${GOMA_DIR}:$(realpath third_party/llvm-build/Release+Asserts/bin):${PATH}
+PATH=$path LD=/usr/bin/gold ninja -C out/Debug -j 1000 $@ | ninja-filter
+echo "Finished"

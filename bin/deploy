@@ -1,0 +1,5 @@
+#!/bin/bash
+
+TO="${TO:-172.28.51.97}"
+BOARD="${SDK_BOARD:-lumpy}"
+deploy_chrome --build-dir="out_${BOARD}/Release" --to="$TO"
