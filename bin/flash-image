@@ -1,0 +1,85 @@
+#!/bin/bash
+
+die() {
+  echo "$*" 1>&2
+  exit -1
+}
+
+devlist() {
+  local dev
+
+  for dev in $(cat /proc/partitions); do
+      [ -r "/sys/block/$dev/device/type" ] &&
+      t=$(cat "/sys/block/$dev/device/type") &&
+      [ "$t" = "0" ] &&
+      r=$(cat "/sys/block/$dev/removable") &&
+      [ "$r" = "1" ] &&
+      readlink -f "/sys/block/$dev" | grep -q -i usb &&
+      echo "$dev" || true      
+  done
+}
+
+devinfo() {
+  for dev in $1; do
+    v=$(cat "/sys/block/$dev/device/vendor") &&
+    m=$(cat "/sys/block/$dev/device/model") &&
+    s=$(cat "/sys/block/$dev/size") && ss=$(( $s * 512 / 1000000 )) &&
+    echo "/dev/$dev ${ss}MB $v $m"
+  done
+}
+
+display_choices() {
+  local count
+  local desc
+
+  count=1
+  echo "0 - <quit>"
+  for dev in $1; do
+    desc=$(devinfo "$dev")
+    echo "$count - Use $desc"
+    count=$(( count + 1 ))
+  done
+}
+
+[ "$#" -eq 1 ] || die "Usage: $0 recovery.bin"
+
+IMAGE="$1"
+
+if [ ! -f "$IMAGE" ] || [ ! -r "$IMAGE" ]; then
+  die "Recovery image ${IMAGE} does not exists."
+fi
+
+DEVLIST=$(devlist)
+NUM_DRIVES=$(echo "$DEVLIST" | wc -l)
+
+display_choices "$DEVLIST"
+
+while true; do
+  echo -n "Select device from that list: "
+  read num
+  if [ -z "$num" ] || echo "$num" | grep -q '[^0-9]'; then
+    echo "Sorry, I didn't understand that."
+  elif [ "$num" -eq 0 ]; then
+    echo "OK, quit."
+    exit 0
+  elif [ "$num" -lt "0" ] || [ "$num" -gt "$NUM_DRIVES" ]; then
+    echo "That's not one of the choices."
+  else
+    break
+  fi
+done
+
+DEVNAME=$(echo "$DEVLIST" | sed -n $num'p')
+DEVICE=/dev/${DEVNAME}
+
+echo "Writing image to ${DEVICE}..."
+sudo dd bs=4194304 of=${DEVICE} if="${IMAGE}" conv=fsync
+
+if [ "$?" -ne 0 ]; then
+  die "Failed."
+fi
+
+sudo sync
+
+echo "Done"
+exit 0
