@@ -1,2 +1,0 @@
-#!/bin/bash
-clang-format -style Chromium
