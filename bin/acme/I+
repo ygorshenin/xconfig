@@ -1,0 +1,29 @@
+#!/bin/bash
+
+r() {
+  9p read acme/$winid/$1
+}
+
+w() {
+  9p write acme/$winid/$1
+}
+
+prefix='  '
+for arg
+do
+  case "$arg" in
+    [0-9]*) prefix=$(head -c $arg </dev/zero | tr '\0' '\40') ;;
+         *) ;;
+  esac
+done
+
+tmp=/tmp/I+.$$
+trap "rm -f $tmp" 0 1 2 15
+
+echo -n 'addr=dot' | w ctl
+if r xdata | sed '/^$/! s/^/'"$prefix"'/' >$tmp
+then
+        echo -n 'addr=dot' | w ctl
+        w data <$tmp
+fi
+

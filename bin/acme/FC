@@ -1,0 +1,26 @@
+#!/bin/bash
+
+r() {
+  9p read acme/$winid/$1
+}
+
+w() {
+  9p write acme/$winid/$1
+}
+
+tmp=/tmp/FC.$$
+trap "rm -f $tmp" 0 1 2 15
+
+echo -n 'addr=dot' | w ctl
+if r xdata | format-comment >$tmp
+then
+  echo -n 'addr=dot' | w ctl
+  if ! r xdata | cmp /dev/stdin $tmp >/dev/null 2>&1
+  then
+    echo -n mark | w ctl
+    echo -n nomark | w ctl
+    echo -n 'addr=dot' | w ctl
+    w data <$tmp
+  fi
+fi
+

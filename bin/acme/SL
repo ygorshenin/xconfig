@@ -1,0 +1,33 @@
+#!/bin/bash
+
+r() {
+  9p read acme/$winid/$1
+}
+
+w() {
+  9p write acme/$winid/$1
+}
+
+tmp1=/tmp/SL1.$$
+tmp2=/tmp/SL2.$$
+trap "rm -f $tmp1 $tmp2" 0 1 2 15
+
+echo -n 'addr=dot' | w ctl
+if r xdata >$tmp1 && test -s $tmp1
+then
+  last=$(tail -c1 $tmp1)
+  LC_ALL=C sort -o $tmp2 $tmp1
+  if test "$last" != ""
+  then
+    head -c-1 $tmp2 >$tmp1
+  else
+    mv $tmp2 $tmp1
+  fi
+
+  echo -n 'addr=dot' | w ctl
+  if ! r xdata | cmp -s $tmp1 /dev/stdin
+  then
+    echo -n 'addr=dot' | w ctl
+    w data <$tmp1
+  fi
+fi

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+r() {
+  9p read acme/$winid/$1
+}
+
+w() {
+  9p write acme/$winid/$1
+}
+
+tmp=/tmp/I-.$$
+trap "rm -f $tmp" 0 1 2 15
+
+len=2
+for arg
+do
+  case "$arg" in
+    [0-9]*) len="$arg" ;;
+         *) ;;
+  esac
+done
+
+echo -n 'addr=dot' | w ctl
+if r xdata | sed 's/^ \{0,'"$len"'\}//' >$tmp
+then
+  echo -n 'addr=dot' | w ctl
+  w data <$tmp
+fi
