@@ -1,0 +1,2 @@
+#!/bin/bash
+BROWSER=google-chrome /usr/local/plan9/bin/plumber

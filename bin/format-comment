@@ -1,0 +1,32 @@
+#!/bin/bash
+
+PATH=/bin:/usr/bin
+
+file1=/tmp/cf1.$$
+file2=/tmp/cf2.$$
+
+cleanup() {
+  rm -f $file1 $file2
+}
+
+trap "cleanup; exit 1" 1 2 15
+
+cat >$file1
+
+newline=false
+if test -s $file1 && test "$(tail -c1 $file1)" = ""
+then
+  newline=true
+fi
+
+prefix=$(sed -n 's/\(^ *[^ ]* *\).*/\1/p; 1q' $file1)
+fmt -p "$prefix" $file1 >$file2
+
+if $newline
+then
+  cat $file2
+else
+  head -c-1 $file2
+fi
+
+cleanup
