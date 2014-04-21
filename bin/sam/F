@@ -1,0 +1,10 @@
+#!/bin/bash
+
+STYLE=Chromium
+
+case $# in
+  1) STYLE="$1" ;;
+  *) ;;
+esac
+
+clang-format -style="$STYLE"

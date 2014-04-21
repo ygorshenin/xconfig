@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -z ${CHROMIUM_CROS_IMG_PATH} ] || [ ! -e ${CHROMIUM_CROS_IMG_PATH} ] || [ ! -d ${CHROMIUM_CROS_IMG_PATH} ]
+if [ ! -e "${CHROMIUM_CROS_IMG_PATH}" ] || [ ! -d "${CHROMIUM_CROS_IMG_PATH}" ]
 then
     echo "Could not find path to the images dir."
     exit -1
@@ -11,25 +11,25 @@ fi
 
 readonly DIR="${CHROMIUM_CROS_IMG_PATH}/${SDK_BOARD}-${SDK_VERSION}"
 
-if [ ! -e ${DIR} ] || [ ! -d ${DIR} ]; then
+if [ ! -e "${DIR}" ] || [ ! -d "${DIR}" ]; then
     echo "Could not find path to the latest images dir."
     exit -1
 fi
 
 readonly IMG="${DIR}/chromiumos_test_image.bin"
 
-if [ ! -e ${IMG} ] || [ ! -f ${IMG} ]; then
+if [ ! -e "${IMG}" ] || [ ! -f "${IMG}" ]; then
     echo "Could not find latest image file."
     exit -1
 fi
 
-if [ -z ${CHROMIUMOS_CROS_PATH} ] || [ ! -e ${CHROMIUMOS_CROS_PATH} ]; then
+if [ -z "${CHROMIUMOS_CROS_PATH}" ] || [ ! -e "${CHROMIUMOS_CROS_PATH}" ]; then
     echo "Could not find path to the chromiumos cros dir."
     exit -1
 fi
 
 readonly SCRIPT="${CHROMIUMOS_CROS_PATH}/src/scripts/image_to_usb.sh"
-if [ ! -e ${SCRIPT} ] || [ ! -f ${SCRIPT} ]; then
+if [ ! -e "${SCRIPT}" ] || [ ! -f "${SCRIPT}" ]; then
     echo "Could not find image_to_usb.sh utility."
     exit -1
 fi

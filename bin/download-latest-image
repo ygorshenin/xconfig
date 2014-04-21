@@ -1,10 +1,11 @@
 #!/bin/bash
 
-if [ ! -e ${CHROMIUM_CROS_IMG_PATH} ] || [ ! -d ${CHROMIUM_CROS_IMG_PATH} ]
+if [ ! -e "${CHROMIUM_CROS_IMG_PATH}" ] || [ ! -d "${CHROMIUM_CROS_IMG_PATH}" ]
 then
     echo "Could not find path to the images dir."
     exit -1
 fi
+
 [ -z ${SDK_BOARD} ] && echo 'Could not find ${SDK_BOARD}.' && exit -1
 [ -z ${SDK_VERSION} ] && echo 'Could not find ${SDK_VERSION}.' && exit -1
 if [ ! which gsutil > /dev/null 2>&1 ]; then
@@ -14,7 +15,7 @@ fi
 
 readonly IMG="chromiumos_test_image.tar.xz"
 readonly PREFIX=`gsutil ls gs://chromeos-image-archive/${SDK_BOARD}-release | grep "${SDK_VERSION}" | head`
-[ -z ${PREFIX} ] && echo "Could not find latest image on Google Storage." && exit -1
+[ -z "${PREFIX}" ] && echo "Could not find latest image on Google Storage." && exit -1
 readonly URL="${PREFIX}${IMG}"
 readonly DIR="${CHROMIUM_CROS_IMG_PATH}/${SDK_BOARD}-${SDK_VERSION}"
 
