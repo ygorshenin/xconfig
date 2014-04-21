@@ -1,8 +1,0 @@
-#!/bin/bash
-
-file=/tmp/cf.$$
-trap "rm -f $file; exit 1" 1 2 15
-cat > "$file"
-prefix=$(sed -n 's/\(^ *[^ ]* *\).*/\1/p; 1q' "$file")
-fmt -p "$prefix" "$file"
-rm -f $file
