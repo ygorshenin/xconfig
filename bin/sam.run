@@ -1,2 +1,2 @@
 #!/bin/bash
-PATH=/usr/local/google/home/ygorshenin/bin/sam:${PATH} font=/mnt/font/Inconsolata/16a/font sam -a "$@"
+PATH=/usr/local/google/home/ygorshenin/bin/sam:${PATH} sam -a "$@"
