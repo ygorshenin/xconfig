@@ -72,9 +72,9 @@ if [ ! -z "${repository_directory}" ]; then
     set -x
     (
         cd "${repository_directory}"
-        git pull --rebase
-        (cd "tools/clang" && git pull --rebase)
-        (cd "projects/compiler-rt" && git pull --rebase)
+        git checkout master && git pull --rebase
+        (cd "tools/clang" && git checkout master && git pull --rebase)
+        (cd "projects/compiler-rt" && git checkout master && git pull --rebase)
     )
     set +e
     set +x
