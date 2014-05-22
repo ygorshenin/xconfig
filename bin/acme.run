@@ -1,3 +1,2 @@
 #!/bin/bash
-PATH=/usr/local/google/home/ygorshenin/bin/acme:${PATH} acme -f "$font" -a "$@"
-
+PATH=${HOME}/bin/acme:${PATH} acme -f "$font" -a "$@"

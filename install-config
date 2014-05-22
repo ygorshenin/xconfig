@@ -57,7 +57,6 @@ XMONAD_PATH=${ROOT_DIR}/.xmonad
 XMOBAR_PATH=${ROOT_DIR}/.xmobarrc
 XRESOURCES_PATH=${ROOT_DIR}/.Xresources
 XSESSION_PATH=${ROOT_DIR}/.xsession
-BIN_PATH=${ROOT_DIR}/bin
 
 if [ ! -z "${help}" ]; then
     usage
@@ -79,12 +78,6 @@ fi
 log info "Installing xsession config..."
 if ! cp ${XRESOURCES_PATH} ${XSESSION_PATH} ${HOME}; then
     log error "Can't install xsession config..."
-    exit -1
-fi
-
-log info "Installing bin..."
-if ! cp -R ${BIN_PATH} ${HOME}; then
-    log error "Can't install bin, aborting."
     exit -1
 fi
 
