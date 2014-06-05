@@ -1,0 +1,12 @@
+#!/bin/bash
+
+prefix='  '
+for arg
+do
+  case "$arg" in
+    [0-9]*) prefix=$(head -c $arg </dev/zero | tr '\0' '\40') ;;
+         *) ;;
+  esac
+done
+
+sed '/^$/! s/^/'"$prefix"'/'
