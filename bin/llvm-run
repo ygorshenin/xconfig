@@ -1,0 +1,4 @@
+#!/bin/bash
+
+LD_LIBRARY_PATH=$HOME/install/gcc-4.8.2/lib64:$LD_LIBRARY_PATH \
+PATH=$HOME/llvm/llvm_cmake_build/bin:$PATH $@

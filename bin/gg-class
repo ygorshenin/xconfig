@@ -1,0 +1,8 @@
+#!/bin/bash
+
+case $# in
+  1) git grep "class $1[^A-Za-z0-9_]" ;;
+  *) echo "Usage: $0 classname" 2>&1
+     exit -1
+     ;;
+esac
