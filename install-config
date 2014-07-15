@@ -57,6 +57,8 @@ XMONAD_PATH=${ROOT_DIR}/.xmonad
 XMOBAR_PATH=${ROOT_DIR}/.xmobarrc
 XRESOURCES_PATH=${ROOT_DIR}/.Xresources
 XSESSION_PATH=${ROOT_DIR}/.xsession
+SCRIPTS_PATH=${ROOT_DIR}/bin
+EMACS_DIR=${ROOT_DIR}/emacs
 
 if [ ! -z "${help}" ]; then
     usage
@@ -77,8 +79,22 @@ fi
 
 log info "Installing xsession config..."
 if ! cp ${XRESOURCES_PATH} ${XSESSION_PATH} ${HOME}; then
-    log error "Can't install xsession config..."
+    log error "Can't install xsession config, aborting."
     exit -1
 fi
+
+log info "Installing scripts..."
+if test ! -e ${HOME}/bin && ! ln -s ${SCRIPTS_PATH} ${HOME}/bin; then
+    log error "Can't install scripts, aborting."
+    exit -1
+fi
+
+if test ! -d ${HOME}/.emacs.d && ! mkdir -p ${HOME}/.emacs.d; then
+    log error "Can't create .emacs.d directory, aborting."
+    exit -1
+fi
+
+cp ${EMACS_DIR}/.emacs ${HOME}
+cp ${EMACS_DIR}/*.el ${HOME}/.emacs.d
 
 exit 0
