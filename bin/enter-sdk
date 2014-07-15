@@ -1,2 +1,2 @@
 #!/bin/bash
-cros chrome-sdk --board=lumpy --internal
+cros chrome-sdk --board=${BOARD-daisy} --internal
