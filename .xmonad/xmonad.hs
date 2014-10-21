@@ -25,6 +25,8 @@ myWorkspaces = concat [workWorkspaces, genericWorkspaces, mediaWorkspaces]
 
 main = do
   xmobar <- spawnPipe "xmobar"
+  spawn "setxkbmap -query | awk '/layout:.*/ { print $2 }' >/tmp/.layout"
+  spawn "amixer get Master | awk -f ~/bin/amixer_status.awk >/tmp/.volume"
   let layout = onWorkspaces mediaWorkspaces (noBorders $ Full) $
                avoidStruts .
                smartBorders $ layoutHook defaultConfig
