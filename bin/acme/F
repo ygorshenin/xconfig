@@ -18,7 +18,7 @@ tmp=/tmp/F.$$
 trap "rm -f $tmp" 0 1 2 15
 
 echo -n 'addr=dot' | w ctl
-if r xdata | clang-format -style "$STYLE" >$tmp
+if r xdata | clang-format-3.5 -style "$STYLE" >$tmp
 then
   echo -n 'addr=dot' | w ctl
   if ! r xdata | cmp /dev/stdin $tmp >/dev/null 2>&1

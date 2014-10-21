@@ -1,2 +1,2 @@
 #!/bin/bash
-/usr/local/bin/dmenu_run -fn "Inconsolata-12:bold"
+/usr/local/bin/dmenu_run -fn "Droid Sans Mono-10:bold" -nb black

@@ -57,11 +57,35 @@ if [ ! -z "${checkout_directory}" ]; then
     set -e
     set -x
     (
-        cd "${checkout_directory}"
+	cd "${checkout_directory}"
         git clone http://llvm.org/git/llvm.git
-        (cd llvm/tools && git clone http://llvm.org/git/clang.git)
-        (cd llvm/projects && git clone http://llvm.org/git/compiler-rt.git)
-        (cd llvm/projects && git clone http://llvm.org/git/test-suite.git)
+	(
+	    cd llvm
+	    git svn init https://llvm.org/svn/llvm-project/llvm/trunk --username=ygorshenin
+	    git config svn-remote.svn.fetch :refs/remotes/origin/master
+	    git svn rebase -l
+	)
+        (
+	    cd llvm/tools
+	    git clone http://llvm.org/git/clang.git
+	    cd clang
+	    git svn init https://llvm.org/svn/llvm-project/cfe/trunk --username=ygorshenin
+	    git svn rebase -l
+	)
+        (
+	    cd llvm/projects
+	    git clone http://llvm.org/git/compiler-rt.git
+	    cd compiler-rt
+	    git svn init https://llvm.org/svn/llvm-project/compiler-rt/trunk --username=ygorshenin
+	    git svn rebase -l
+	)
+        (
+	    cd llvm/projects
+	    git clone http://llvm.org/git/test-suite.git
+	    cd test-suite
+	    git svn init https://llvm.org/svn/llvm-project/test-suite/trunk --username=ygorshenin
+	    git svn rebase -l
+	)
         git config branch.master.rebase true
     )
     set +e
@@ -70,12 +94,14 @@ fi
 if [ ! -z "${repository_directory}" ]; then
     set -e
     set -x
-    (
-        cd "${repository_directory}"
-        git checkout master && git pull --rebase
-        (cd "tools/clang" && git checkout master && git pull --rebase)
-        (cd "projects/compiler-rt" && git checkout master && git pull --rebase)
-    )
+    for dir in "${repository_directory}" "tools/clang" "projects/compiler-rt"
+    do
+        (
+	    cd "$dir"
+	    git checkout master && git pull --rebase
+	    git svn rebase -l
+	)
+    done
     set +e
     set +x
 fi
