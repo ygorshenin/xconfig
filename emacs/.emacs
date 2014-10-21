@@ -1,11 +1,6 @@
 (transient-mark-mode 1)
 (global-hl-line-mode 't)
 
-;; (require 'color-theme)
-;; (setq color-theme-s-global t)
-;; (require 'color-theme-solarized)
-;; (setq solarized-use-terminal-theme t)
-
 (load-file "~/.emacs.d/google-c-style.el")
 (load-file "~/.emacs.d/llvm-mode.el")
 
@@ -29,12 +24,6 @@
 (add-to-list 'rcirc-server-alist
 	     '("irc.freenode.net"
 	       :channels ("#chromium")))
-
-(add-to-list 'load-path "~/.emacs.d/emacs-color-theme-solarized-master")
-(require 'color-theme)
-(require 'color-theme-solarized)
-(color-theme-initialize)
-(color-theme-solarized-dark)
 
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
 (put 'upcase-region 'disabled nil)
