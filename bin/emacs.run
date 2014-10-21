@@ -1,2 +1,2 @@
 #!/bin/bash
-PATH=${HOME}/bin/sam:${PATH} emacs -nw $@
+PATH=${HOME}/bin/sam:${PATH} emacs -nw "$@"
