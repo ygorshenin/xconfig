@@ -17,3 +17,24 @@
 
 (add-hook 'c-mode-hook '(lambda () (highlight-lines-matching-regexp ".\\{81\\}" 'hi-yellow)))
 (add-hook 'c++-mode-hook '(lambda () (highlight-lines-matching-regexp ".\\{81\\}" 'hi-yellow)))
+
+(require 'rcirc)
+(setq rcirc-default-nick "ygorshenin")
+(setq rcirc-default-user-name "ygorshenin")
+(setq rcirc-default-full-name "Yuri Gorshenin")
+(rcirc-track-minor-mode 1)
+(add-to-list 'rcirc-server-alist
+	     '("irc.oftc.net"
+	       :channels ("#llvm")))
+(add-to-list 'rcirc-server-alist
+	     '("irc.freenode.net"
+	       :channels ("#chromium")))
+
+(add-to-list 'load-path "~/.emacs.d/emacs-color-theme-solarized-master")
+(require 'color-theme)
+(require 'color-theme-solarized)
+(color-theme-initialize)
+(color-theme-solarized-dark)
+
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+(put 'upcase-region 'disabled nil)
