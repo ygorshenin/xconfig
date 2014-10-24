@@ -1,15 +1,14 @@
 *customization: -color
 XTerm*termName: xterm
 
-xterm*font: inconsolata-18
-xterm*boldFont: inconsolata-18
 xterm*loginShell: true
 xterm*vt100*geometry: 80x50
 xterm*saveLines: 2000
 xterm*charClass: 33:48,35:48,37:48,43:48,45-47:48,64:48,95:48,126:48
 xterm*eightBitInput: false
 
-xterm*faceName: inconsolata-16
+xterm*faceName: Droid Sans Mono
+xterm*faceSize: 12
 
 ! Solarized color scheme for the X Window System
 !
