@@ -2,3 +2,9 @@
 
 PATH=${HOME}/bin:${PATH}
 PATH=$PATH LD=/usr/bin/gold ninja -C out_${SDK_BOARD}/Release -j500 chrome chrome_sandbox nacl_helper | ninja-filter
+success=${PIPESTATUS[0]}
+case $success in
+    0) notify-send "Compilation succeeded" "Compilation of $* succeeded" ;;
+    *) notify-send "Compilation failed" "Compilation of $* failed" ;;
+esac
+exit $success

@@ -1,6 +1,12 @@
 #!/bin/bash
 
-echo "Compiling $@..."
+echo "Compiling $*..."
 path=${GOMA_DIR}:$(realpath third_party/llvm-build/Release+Asserts/bin):${PATH}
-PATH=$path LD=/usr/bin/gold ninja -C out/Debug -j 1000 $@ | ninja-filter
-echo "Finished"
+PATH=$path LD=/usr/bin/gold ninja -C out/Debug -j 1000 "$@" | ninja-filter
+success=${PIPESTATUS[0]}
+case $success in
+    0) notify-send "Compilation succeeded" "Compilation of $* succeeded" ;;
+    *) notify-send "Compilation failed" "Compilation of $* failed" ;;
+esac
+echo "Finished."
+exit $success
