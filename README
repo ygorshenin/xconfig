@@ -1,1 +1,4 @@
-Collection of configuration files and scripts.
+This repository is a collection of my scripts and configuration files
+which I frequently use in my day-to-day basis. These files include:
+XMonad and DMenu configuration files, scripts for Acme, SAM and Emacs
+editors, X11 configs and helper scripts.
