@@ -1,2 +1,3 @@
 #!/bin/bash
+
 /usr/local/bin/dmenu_run -fn "$dmenu_font" -nb black

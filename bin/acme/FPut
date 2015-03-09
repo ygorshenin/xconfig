@@ -25,15 +25,12 @@ case $ext in
                     ;;
 esac
 
-echo -n 'addr=dot' | w ctl
-r xdata | $command 2>&1 1>$tmp | sed 's/<standard input>/'$file'/g'
+echo -n '1,$' | w addr
+r data | $command 2>&1 1>$tmp | sed 's/<standard input>/'$file'/g'
 
 if [ ${PIPESTATUS[1]} -eq 0 ]
 then
-  echo -n 'addr=dot' | w ctl
-  if ! r xdata | cmp /dev/stdin $tmp >/dev/null 2>&1
-  then
-    echo -n 'addr=dot' | w ctl
-    w data <$tmp
-  fi
+  echo -n '1,$' | w addr
+  w data <$tmp
+  echo -n 'put' | w ctl
 fi

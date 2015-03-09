@@ -1,0 +1,7 @@
+#!/bin/bash
+
+qmake QMAKE_CXXFLAGS+="-fsanitize=memory -fno-omit-frame-pointer" \
+    QMAKE_CFLAGS+="-fsanitize=memory -fno-omit-frame-pointer" \
+    QMAKE_LFLAGS+="-fsanitize=memory" \
+    CONFIG+=debug \
+    -spec linux-clang "$@"
