@@ -5,9 +5,9 @@ die() {
   exit 1
 }
 
-export QTDIR=${QTDIR:-/home/y/third-party/qt5-clang-build}
+export QTDIR=${QTDIR:-/home/y/third-party/qt5-clang-tsan-build}
 
-if [ ! -d "$QTDIR" ]
+if [ ! -d "QTDIR" ]
 then
   die "Can't find QTDIR: $QTDIR"
 fi
@@ -18,8 +18,8 @@ export PATH=$QTDIR/bin:$PATH
 echo "QTDIR is set to: $QTDIR"
 echo "QMAKESPEC is set to: $QMAKESPEC"
 
-readonly CFLAGS="-fsanitize=address -fno-omit-frame-pointer"
-readonly LFLAGS="-fsanitize=address"
+CFLAGS="-fsanitize=thread -fno-omit-frame-pointer"
+LFLAGS="-fsanitize=thread"
 
 exec qmake QMAKE_CXXFLAGS+="$CFLAGS" \
     QMAKE_CFLAGS+="$CFLAGS" \
