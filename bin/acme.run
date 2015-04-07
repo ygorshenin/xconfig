@@ -1,2 +1,10 @@
 #!/bin/bash
-PATH=${HOME}/bin/acme:${PATH} acme -f "$font" -a "$@"
+
+if [ -z "${PLAN9:+defined}" ]
+then
+    echo "PLAN9 variable is not set" 2>&1
+    exit 1
+fi
+
+export font=${font:-"/mnt/font/Inconsolata/18a/font"}
+PATH=$PLAN9/bin:$HOME/bin/acme:$PATH acme -f "$font" -a "$@"
