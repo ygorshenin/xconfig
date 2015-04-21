@@ -1,10 +1,5 @@
 #!/bin/bash
 
-if [ -z "${PLAN9:+defined}" ]
-then
-    echo "PLAN9 variable is not set" 2>&1
-    exit 1
-fi
-
 export font=${font:-"/mnt/font/Inconsolata/18a/font"}
+export PLAN9=${PLAN9:-$HOME/third-party/plan9port}
 PATH=$PLAN9/bin:$HOME/bin/acme:$PATH acme -f "$font" -a "$@"
