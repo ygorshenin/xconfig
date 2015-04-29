@@ -18,7 +18,7 @@ then
     exit -1
 fi
 
-export font=${font-"/mnt/font/Inconsolata/18a/font"}
+export font=${font-"/mnt/font/DejaVu Sans Mono/18a/font"}
 export GOPATH
 $PLAN9/bin/plumber 1>/dev/null 2>&1
 PATH=$PATH:$HOME/bin/acme:$GOPATH/bin:$PLAN9/bin exec acme -f "$font" -a "$@"
