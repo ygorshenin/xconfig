@@ -3,4 +3,4 @@
 export QMAKESPEC=${QMAKESPEC:-linux-clang}
 readonly LFLAGS="-L/usr/lib -lprofiler"
 
-exec qmake QMAKE_LFLAGS+="$LFLAGS" CONFIG+=debug "$@"
+exec qmake QMAKE_LFLAGS+="$LFLAGS" CONFIG+=release "$@"

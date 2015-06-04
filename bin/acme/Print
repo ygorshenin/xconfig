@@ -1,0 +1,19 @@
+#!/bin/bash
+
+r() {
+  9p read acme/$winid/$1
+}
+
+w() {
+  9p write acme/$winid/$1
+}
+
+path=$(r tag | sed -n '1s/ .*$//p')
+
+if [ -r "$path" ]
+then
+    enscript "$path" 1>/dev/null 2>&1
+else
+    echo "Can't find file: $path" 1>&2
+    exit -1
+fi
