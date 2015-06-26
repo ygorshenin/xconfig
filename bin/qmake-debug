@@ -1,6 +1,15 @@
 #!/bin/bash
 
-export QMAKESPEC=${QMAKESPEC:-linux-clang}
-readonly LFLAGS="-L/usr/lib -lprofiler"
+if [ -z "${QTDIR:+defined}" ]
+then
+  echo '$QTDIR is not defined.' 2>&1
+  exit -1
+fi
 
-exec qmake QMAKE_LFLAGS+="$LFLAGS" CONFIG+=debug "$@"
+if [ -z "{QMAKESPEC:+defined}" ]
+then
+  echo '$QMAKESPEC is not defined.' 2>&1
+  exit -1
+fi
+
+exec "$QTDIR/bin/qmake" CONFIG+=debug "$@"
