@@ -6,19 +6,27 @@ then
     exit -1
 fi
 
-if [ -z "${GOPATH+defined}" ]
-then
-    echo "GOPATH variable is not sed, exiting." 2>&1
-    exit -1
-fi
-
 if [ ! -x "$PLAN9/bin/plumber" ]
 then
     echo "Can't find plumber, exiting." 2>&1
     exit -1
 fi
 
+path=$PATH
+
+if [ -n "${GOPATH-}" ] && [ -d "$GOPATH/bin" ]
+then
+    path=$path:$GOPATH/bin
+fi
+
+if [ -d "$HOME/bin" ]
+then
+    path=$path:$HOME/bin
+fi
+
+path=$path:$PLAN9/bin
+
 export font=${font-"/mnt/font/DejaVu Sans Mono/18a/font"}
 export GOPATH
 $PLAN9/bin/plumber 1>/dev/null 2>&1
-PATH=$PATH:$GOPATH/bin:$HOME/bin/acme:$PLAN9/bin exec acme -f "$font" -a "$@"
+PATH=$path exec acme -f "$font" -a "$@"

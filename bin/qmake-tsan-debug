@@ -1,6 +1,16 @@
 #!/bin/bash
 
-export QMAKESPEC=${QMAKESPEC:-linux-clang}
+if [ -z "${QTDIR:+defined}" ]
+then
+  echo '$QTDIR is not defined.' 2>&1
+  exit -1
+fi
+
+if [ -z "{QMAKESPEC:+defined}" ]
+then
+  echo '$QMAKESPEC is not defined.' 2>&1
+  exit -1
+fi
 
 CFLAGS="-fsanitize=thread -fno-omit-frame-pointer"
 LFLAGS="-fsanitize=thread"
