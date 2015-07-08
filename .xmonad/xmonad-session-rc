@@ -1,0 +1,23 @@
+#!/bin/bash
+ 
+# Load resources
+xrdb -merge .Xresources
+ 
+# Set the background color
+xsetroot -solid black
+ 
+WALLPAPER="${HOME}/Pictures/wallpaper.png"
+if [ -f "${WALLPAPER}" ]; then
+    xloadimage -onroot -zoom 150 -center -border black "${WALLPAPER}"
+fi
+xscreensaver -no-splash &
+
+function spawn_pipe() {
+    local pipe="$1"
+    rm -rf "${pipe}"
+    mkfifo "${pipe}"
+    echo "--" >"${pipe}" &
+}
+
+spawn_pipe "/tmp/.layout"
+spawn_pipe "/tmp/.volume"

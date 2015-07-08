@@ -19,5 +19,5 @@ Config { font = "xft:Droid Sans Mono:size=10:bold:antialias=true"
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %cpu% | %memory% * %swap% | Vol: %sound% | %eth0% wlan0: %wlan0wi% | %battery% | %layout% | <fc=#ee9a00>%date%</fc>"
+       , template = "%StdinReader% }{ %cpu% * %memory% * %swap% | Vol: %sound% | %eth0% wlan0: %wlan0wi% | %battery% | %layout% | <fc=#ee9a00>%date%</fc>"
        }
