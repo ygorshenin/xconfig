@@ -2,7 +2,8 @@
 
 if [ -z "${PLAN9+defined}" ]
 then
-    echo "PLAN9 variable is not set, exiting." 2>&1
+    echo $PATH 1>>~/acme.log
+    echo "PLAN9 variable is not set, exiting." 2>&1 1>>~/acme.log
     exit -1
 fi
 
@@ -26,7 +27,7 @@ fi
 
 path=$path:$PLAN9/bin
 
-export font=${font-"/mnt/font/DejaVu Sans Mono/18a/font"}
+export font=${font-"/mnt/font/DejaVu Sans Mono/24a/font"}
 export GOPATH
 $PLAN9/bin/plumber 1>/dev/null 2>&1
 PATH=$path exec acme -f "$font" -a "$@"

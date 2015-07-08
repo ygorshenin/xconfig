@@ -7,10 +7,10 @@ fi
 
 case "${command}" in
     lower)
-	action="2-"
+	action="2%-"
 	;;
     raise)
-	action="2+"
+	action="2%+"
 	;;
     toggle)
 	action="toggle"
