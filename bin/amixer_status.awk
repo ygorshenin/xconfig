@@ -11,12 +11,11 @@ BEGIN {
   rightIsOn = "[on]";
 }
 
-function colorStatus(status) {
-  if (status == "[on]") {
-    return sprintf("<fc=#00ff00>%s</fc>", status)
-  } else {
-    return sprintf("<fc=#ff0000>%s</fc>", status)
-  }
+function colorVolume(volume, status) {
+  if (status == "[on]")
+    return sprintf("<fc=#00ff00>%s</fc>", volume)
+  else
+    return sprintf("<fc=#ff0000>%s</fc>", volume)
 }
 
 /Front Left/ {
@@ -29,9 +28,5 @@ function colorStatus(status) {
 }
 
 END {
-  gsub(/[\[\]]/, "", volumeLeft)
-  gsub(/[\[\]]/, "", volumeRight)
-  leftIsOn = colorStatus(leftIsOn)
-  rightIsOn = colorStatus(rightIsOn)
-  print(volumeLeft, leftIsOn, volumeRight, rightIsOn)
+  print(colorVolume(volumeLeft, leftIsOn), colorVolume(volumeRight, rightIsOn))
 }
