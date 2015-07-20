@@ -38,3 +38,5 @@
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
 (setq indent-line-function 'insert-tab)
+(setq common-lisp-hyperspec-root "/usr/share/doc/hyperspec/")
+(global-set-key [(f2)] 'slime-hyperspec-lookup)

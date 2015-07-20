@@ -11,6 +11,7 @@ if [ -f "${WALLPAPER}" ]; then
     xloadimage -onroot -zoom 150 -center -border black "${WALLPAPER}"
 fi
 xscreensaver -no-splash &
+xfce4-power-manager &
 
 function spawn_pipe() {
     local pipe="$1"
