@@ -31,7 +31,7 @@
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
 (put 'upcase-region 'disabled nil)
 
-(setq gofmt-command "goimports")
+(setq gofmt-command "gofmt")
 (load-file "~/.emacs.d/go-mode.el")
 (add-hook 'before-save-hook 'gofmt-before-save)
 
