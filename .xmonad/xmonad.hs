@@ -43,6 +43,8 @@ main = do
     [ ((controlMask, xK_Shift_L), switchLayout)
     , ((mod4Mask .|. shiftMask, xK_l), spawn "screenlock")
     , ((mod4Mask .|. shiftMask, xK_g), spawn "google-chrome-stable")
+    , ((mod4Mask, xK_Print), spawn "scrot ~/Pictures/screen-%Y-%m-%d-%H-%M-%S.png -d 1")
+    , ((mod4Mask .|. controlMask, xK_Print), spawn "scrot ~/Pictures/window-%Y-%m-%d-%H-%M-%S.png -u -d 1")
     , ((0, 0x1008ff11), switchVolume Lower)
     , ((0, 0x1008ff13), switchVolume Raise)
     , ((0, 0x1008ff12), switchVolume Toggle)

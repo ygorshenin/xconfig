@@ -3,4 +3,4 @@
 set -e
 set -x
 
-sudo apt-get install -y xmonad dmenu xmobar fonts-inconsolata xloadimage xfce4-power-manager xscreensaver
+sudo apt-get install -y xmonad dmenu xmobar fonts-inconsolata xloadimage xfce4-power-manager xscreensaver scrot

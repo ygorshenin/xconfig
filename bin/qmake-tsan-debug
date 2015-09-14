@@ -1,21 +1,12 @@
 #!/bin/bash
 
-if [ -z "${QTDIR:+defined}" ]
-then
-  echo '$QTDIR is not defined.' 2>&1
-  exit -1
-fi
-
-if [ -z "{QMAKESPEC:+defined}" ]
-then
-  echo '$QMAKESPEC is not defined.' 2>&1
-  exit -1
-fi
+export QMAKESPEC=${QMAKESPEC:-linux-clang}
 
 CFLAGS="-fsanitize=thread -fno-omit-frame-pointer"
 LFLAGS="-fsanitize=thread"
 
-exec qmake QMAKE_CXXFLAGS+="$CFLAGS" \
+exec qmake \
+    QMAKE_CXXFLAGS+="$CFLAGS" \
     QMAKE_CFLAGS+="$CFLAGS" \
     QMAKE_LFLAGS+="$LFLAGS" \
     CONFIG+=debug \
