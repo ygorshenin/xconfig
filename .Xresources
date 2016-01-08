@@ -1,5 +1,5 @@
 *customization: -color
-XTerm*termName: xterm
+XTerm*termName: xterm-256color
 
 xterm*loginShell: true
 xterm*vt100*geometry: 80x50
@@ -14,7 +14,6 @@ xterm*faceSize: 12
 !
 ! http://ethanschoonover.com/solarized
 
-
 ! Common
 
 #define S_yellow        #b58900
@@ -26,7 +25,6 @@ xterm*faceSize: 12
 #define S_cyan          #2aa198
 #define S_green         #859900
 
-
 ! Dark
 
 #define S_base03        #002b36
@@ -37,7 +35,6 @@ xterm*faceSize: 12
 #define S_base1         #93a1a1
 #define S_base2         #eee8d5
 #define S_base3         #fdf6e3
-
 
 ! Light
 

@@ -1,13 +1,21 @@
 #!/bin/bash
 
-export QMAKESPEC=${QMAKESPEC:-linux-clang}
+if [ -z ${QMAKE:-} ]
+then
+    QMAKE=$(which qmake)
+fi
+
+SPEC=${SPEC:-linux-clang-libc++}
 
 readonly CFLAGS="-fsanitize=address -fno-omit-frame-pointer"
 readonly LFLAGS="-fsanitize=address"
 
-exec qmake \
-    QMAKE_CXXFLAGS+="$CFLAGS" \
-    QMAKE_CFLAGS+="$CFLAGS" \
-    QMAKE_LFLAGS+="$LFLAGS" \
+set -e -x
+
+"$QMAKE" \
+    -spec "$SPEC" \
     CONFIG+=debug \
+    QMAKE_CFLAGS+="$CFLAGS" \
+    QMAKE_CXXFLAGS*="$CFLAGS" \
+    QMAKE_LFLAGS*="$LFLAGS" \
     "$@"

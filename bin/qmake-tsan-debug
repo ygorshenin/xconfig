@@ -5,7 +5,7 @@ export QMAKESPEC=${QMAKESPEC:-linux-clang}
 CFLAGS="-fsanitize=thread -fno-omit-frame-pointer"
 LFLAGS="-fsanitize=thread"
 
-exec qmake \
+exec /home/y/hdd/qt5/qtbase/bin/qmake \
     QMAKE_CXXFLAGS+="$CFLAGS" \
     QMAKE_CFLAGS+="$CFLAGS" \
     QMAKE_LFLAGS+="$LFLAGS" \

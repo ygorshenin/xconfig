@@ -1,5 +1,19 @@
 #!/bin/bash
 
-export QMAKESPEC=${QMAKESPEC:-linux-clang}
+if [ -z ${QMAKE:-} ]
+then
+    QMAKE=$(which qmake)
+fi
 
-exec "$QTDIR/bin/qmake" CONFIG+=debug "$@"
+SPEC=${SPEC:-linux-clang-libc++}
+
+readonly LFLAGS="-L/usr/lib -lprofiler"
+
+set -e -x
+
+"$QMAKE" \
+    -spec "$SPEC" \
+    CONFIG+=debug \
+    DEFINES+=USE_GOOGLE_PROFILER \
+    QMAKE_LFLAGS*="$LFLAGS" \
+    "$@"

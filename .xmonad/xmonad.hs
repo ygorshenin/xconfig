@@ -3,6 +3,7 @@ import System.IO
 import XMonad
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.SetWMName
 import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace
 import XMonad.Util.EZConfig (additionalKeys)
@@ -39,6 +40,7 @@ main = do
                              }
                          , modMask = mod4Mask
                          , terminal = "xterm"
+                         , startupHook = setWMName "LG3D"
                          } `additionalKeys`
     [ ((controlMask, xK_Shift_L), switchLayout)
     , ((mod4Mask .|. shiftMask, xK_l), spawn "screenlock")

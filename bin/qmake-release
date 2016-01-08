@@ -1,6 +1,22 @@
 #!/bin/bash
 
-export QMAKESPEC=${QMAKESPEC:-linux-clang}
+if [ -z ${QMAKE:-} ]
+then
+    QMAKE=$(which qmake)
+fi
+
+SPEC=${SPEC:-linux-clang-libc++}
+
 readonly LFLAGS="-L/usr/lib -lprofiler"
 
-exec qmake QMAKE_LFLAGS+="$LFLAGS" CONFIG+=release "$@"
+set -e -x
+
+"$QMAKE" \
+    -spec "$SPEC" \
+    CONFIG+=release \
+    DEFINES+=USE_SEARCH_QUERY_V2 \
+    QMAKE_LFLAGS*="$LFLAGS" \
+    "$@"
+
+exec make -j8 all
+
