@@ -1,4 +1,5 @@
-(defvar *packages* '(magit color-theme clang-format google-c-style haskell-mode go-mode slime))
+(defvar *packages* '(magit color-theme clang-format google-c-style
+                           haskell-mode go-mode slime helm helm-projectile))
 
 (defun init-packages ()
   (package-initialize)
@@ -50,7 +51,7 @@
   (setq gofmt-command "gofmt")
   (add-hook 'before-save-hook 'gofmt-before-save))
 
-(defun init-helm ()
+(defun init-helm-mode ()
   (require 'helm)
   (require 'helm-config)
   (global-set-key (kbd "C-c h") 'helm-command-prefix)
@@ -64,7 +65,8 @@
 
   (global-unset-key (kbd "C-x c"))
 
-  (setq helm-split-window-in-side-p t)
+  (setq helm-display-header-line nil
+        helm-split-window-in-side-p t)
   (helm-mode 1)
 
   (projectile-global-mode)
@@ -88,11 +90,23 @@
                '("irc.freenode.net"
                  :channels ("#chromium"))))
 
+(defun toggle-color-theme ()
+  "Switches between dark and light themes"
+  (interactive)
+  (let ((mode (frame-parameter nil 'background-mode)))
+    (when (find 'solarized custom-enabled-themes)
+      (disable-theme 'solarized))
+    (if (eq mode 'dark)
+      (set-frame-parameter nil 'background-mode 'light)
+      (set-frame-parameter nil 'background-mode 'dark))
+    (load-theme 'solarized t)))
+
 (defun init-color-theme ()
   (require 'color-theme)
   (require 'color-theme-solarized)
-  (color-theme-initialize)
-  (color-theme-solarized-light))
+  (set-frame-parameter nil 'background-mode 'light)
+  (load-theme 'solarized t)
+  (global-set-key (kbd "<f11>") 'toggle-color-theme))
 
 (defun init-snippets ()
   (require 'yasnippet)
@@ -101,7 +115,10 @@
         yas-prompt-functions
         '(yas-dropdown-prompt yas-completing-prompt yas-maybe-ido-prompt yas-no-prompt)))
 
-(defun disable-bars ()
+(defun init-fullscreen ()
+  (when (eq window-system 'x)
+    (set-frame-parameter nil 'fullscreen 'fullboth))
+  (scroll-bar-mode -1)
   (menu-bar-mode -1)
   (tool-bar-mode -1))
 
@@ -112,16 +129,18 @@
 (init-haskell-mode)
 (init-go-mode)
 (init-rcirc)
-(init-helm)
+(init-helm-mode)
 (init-magit-mode)
 (init-color-theme)
 (init-snippets)
-(disable-bars)
+(init-fullscreen)
 
+(shell)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 120 :width normal))))
- '(magit-item-highlight ((t nil))))
+ '(magit-diff-context-highlight ((t (:inherit nil))))
+ '(magit-section-highlight ((t (:inherit highlight)))))
