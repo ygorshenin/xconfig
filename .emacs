@@ -1,6 +1,14 @@
+(defun is-osx () (string= "darwin" system-type))
+
 (defvar *packages* '(magit color-theme color-theme-solarized color-theme-sanityinc-solarized
                            clang-format google-c-style
                            haskell-mode go-mode slime helm helm-projectile))
+(defvar *font-family* (if (is-osx)
+                          "Monaco"
+                          "DejaVu Sans Mono"))
+(defvar *font-height* (if (is-osx)
+                          160
+                          120))
 
 (defun init-packages ()
   (package-initialize)
@@ -9,7 +17,7 @@
                            ("melpa" . "https://melpa.org/packages/"))))
 
 (defun download-packages ()
-  ; Downloads all necessary packages.
+  "Downloads all necessary packages."
   (interactive)
   (package-refresh-contents)
   (dolist (package *packages*)
@@ -18,6 +26,7 @@
       (package-install package))))
 
 (defun switch-to-shell ()
+  "Switches to shell buffer"
   (interactive)
   (let* ((buffer-names (mapcar #'buffer-name (buffer-list)))
          (shell-name "*shell*")
@@ -47,7 +56,9 @@
   (require 'google-c-style)
 
   (defun customize-keys (mode-map)
-    (define-key mode-map (kbd "C-c C-c") 'recompile))
+    (define-key mode-map (kbd "C-c C-c") 'recompile)
+    (define-key mode-map (kbd "C-c C-p") 'switch-to-shell)
+    (define-key mode-map (kbd "C-c p") 'switch-to-shell))
 
   (global-set-key (kbd "C-c C-r") 'clang-format-region)
   (global-set-key (kbd "C-c C-f") 'clang-format-buffer)
@@ -140,8 +151,7 @@
         '(yas-dropdown-prompt yas-completing-prompt yas-maybe-ido-prompt yas-no-prompt)))
 
 (defun init-fullscreen ()
-  (when (eq window-system 'x)
-    (set-frame-parameter nil 'fullscreen 'fullboth))
+  (set-frame-parameter nil 'fullscreen 'fullboth)
   (scroll-bar-mode -1)
   (menu-bar-mode -1)
   (tool-bar-mode -1))
@@ -165,7 +175,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 120 :width normal))))
+ `(default ((t (:family ,*font-family* :foundry "unknown" :slant normal :weight normal :height ,*font-height* :width normal))))
  '(magit-diff-context-highlight ((t (:inherit nil))))
  '(magit-section-highlight ((t (:inherit highlight)))))
 (custom-set-variables
