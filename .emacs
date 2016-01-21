@@ -51,26 +51,27 @@
   (global-set-key (kbd "C-c p") 'switch-to-shell)
   (global-set-key (kbd "C-c C-c") 'recompile))
 
-(defun init-c++-mode ()
+(defun customize-common-coding-mode-map (mode-map)
+  (define-key mode-map (kbd "C-c C-c") 'recompile)
+  (define-key mode-map (kbd "C-c C-p") 'switch-to-shell)
+  (define-key mode-map (kbd "C-c p") 'switch-to-shell)
+  (define-key mode-map (kbd "C-c C-r") 'clang-format-region)
+  (define-key mode-map (kbd "C-c C-f") 'clang-format-buffer)
+
+  (highlight-lines-matching-regexp ".\\{101\\}" 'hi-yellow))
+
+(defun init-common-coding-mode ()
   (require 'clang-format)
   (require 'google-c-style)
 
-  (defun customize-keys (mode-map)
-    (define-key mode-map (kbd "C-c C-c") 'recompile)
-    (define-key mode-map (kbd "C-c C-p") 'switch-to-shell)
-    (define-key mode-map (kbd "C-c p") 'switch-to-shell))
-
-  (global-set-key (kbd "C-c C-r") 'clang-format-region)
-  (global-set-key (kbd "C-c C-f") 'clang-format-buffer)
+  (if (not (is-osx))
+      (setq clang-format-executable "~/coding/llvm-3.6.1/build/bin/clang-format"))
   (add-hook 'c-mode-common-hook 'google-set-c-style)
   (add-hook 'c-mode-common-hook 'google-make-newline-indent)
 
-  (add-hook 'c-mode-hook #'(lambda ()
-                             (customize-keys c-mode-map)
-                             (highlight-lines-matching-regexp ".\\{101\\}" 'hi-yellow)))
-  (add-hook 'c++-mode-hook #'(lambda ()
-                               (customize-keys c++-mode-map)
-                               (highlight-lines-matching-regexp ".\\{101\\}" 'hi-yellow))))
+  (add-hook 'c-mode-hook (lambda () (customize-common-coding-mode-map c-mode-map)))
+  (add-hook 'c++-mode-hook (lambda () (customize-common-coding-mode-map c++-mode-map)))
+  (add-hook 'java-mode-hook (lambda () (customize-common-coding-mode-map java-mode-map))))
 
 (defun init-clisp-mode ()
   (require 'slime)
@@ -127,6 +128,7 @@
                  :channels ("#chromium"))))
 
 (defun toggle-dark-light ()
+  "Switches between dark and light solarized themes."
   (interactive)
   (cond ((find 'sanityinc-solarized-dark custom-enabled-themes)
          (disable-theme 'sanityinc-solarized-dark)
@@ -145,10 +147,10 @@
 
 (defun init-snippets ()
   (require 'yasnippet)
-  (yas-global-mode 1)
-  (setq yas-snippet-dirs (cons "~/.emacs.d/snippets" yas-snippet-dirs)
-        yas-prompt-functions
-        '(yas-dropdown-prompt yas-completing-prompt yas-maybe-ido-prompt yas-no-prompt)))
+  (setq yas-snippet-dirs (list "~/.emacs.d/snippets")
+	yas-prompt-functions
+        '(yas-dropdown-prompt yas-completing-prompt yas-maybe-ido-prompt yas-no-prompt))
+  (yas-global-mode 1))
 
 (defun init-fullscreen ()
   (set-frame-parameter nil 'fullscreen 'fullboth)
@@ -156,9 +158,10 @@
   (menu-bar-mode -1)
   (tool-bar-mode -1))
 
+(setq inhibit-splash-screen t)
 (init-packages)
 (init-common-edit-mode)
-(init-c++-mode)
+(init-common-coding-mode)
 (init-clisp-mode)
 (init-haskell-mode)
 (init-go-mode)

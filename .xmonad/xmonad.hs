@@ -19,16 +19,17 @@ switchVolume :: MonadIO m => VolumeCommand -> m ()
 switchVolume cmd = spawn $ "~/bin/volume-switch" ++ " " ++ arg
   where arg = map toLower $ show cmd
 
-workWorkspaces    = ["0x1:code", "0x2:code", "0x3:web"]
+codeWorkspaces    = ["0x1:code", "0x2:code"]
+webWorkspaces     = ["0x3:web"]
 genericWorkspaces = map (\d -> "0x" ++ (show d) ++ ":generic") [4..8]
 mediaWorkspaces   = ["0x9:media"]
-myWorkspaces = concat [workWorkspaces, genericWorkspaces, mediaWorkspaces]
+myWorkspaces = concat [codeWorkspaces, webWorkspaces, genericWorkspaces, mediaWorkspaces]
 
 main = do
   xmobar <- spawnPipe "xmobar"
   spawn "setxkbmap -query | awk '/layout:.*/ { print $2 }' >/tmp/.layout"
   spawn "amixer get Master | awk -f ~/bin/amixer_status.awk >/tmp/.volume"
-  let layout = onWorkspaces mediaWorkspaces (noBorders $ Full) $
+  let layout = onWorkspaces (codeWorkspaces ++ mediaWorkspaces) (noBorders $ Full) $
                avoidStruts .
                smartBorders $ layoutHook defaultConfig
   xmonad $ defaultConfig { manageHook = manageDocks <+> manageHook defaultConfig
