@@ -42,23 +42,22 @@
   (global-hl-line-mode 't)
   (setq-default indent-tabs-mode nil)
   (setq-default tab-width 4)
-  (setq indent-line-function 'insert-tab)
+  (setq indent-line-function 'insert-tab
+        compilation-scroll-output 'first-error
+        browse-url-browser-function 'browse-url-generic
+        browse-url-generic-program "google-chrome")
   (put 'upcase-region 'disabled nil)
-  (setq compilation-scroll-output 'first-error)
   (global-set-key (kbd "C-c C-l") 'sort-lines)
   (global-set-key (kbd "C-c l") 'sort-lines)
   (global-set-key (kbd "C-c C-p") 'switch-to-shell)
-  (global-set-key (kbd "C-c p") 'switch-to-shell)
-  (global-set-key (kbd "C-c C-c") 'recompile))
+  (global-set-key (kbd "C-c p") 'switch-to-shell))
 
 (defun customize-common-coding-mode-map (mode-map)
   (define-key mode-map (kbd "C-c C-c") 'recompile)
   (define-key mode-map (kbd "C-c C-p") 'switch-to-shell)
   (define-key mode-map (kbd "C-c p") 'switch-to-shell)
   (define-key mode-map (kbd "C-c C-r") 'clang-format-region)
-  (define-key mode-map (kbd "C-c C-f") 'clang-format-buffer)
-
-  (highlight-lines-matching-regexp ".\\{101\\}" 'hi-yellow))
+  (define-key mode-map (kbd "C-c C-f") 'clang-format-buffer))
 
 (defun init-common-coding-mode ()
   (require 'clang-format)
@@ -81,7 +80,9 @@
 
 (defun init-haskell-mode ()
   (require 'haskell-mode)
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-indent))
+  (add-hook 'haskell-mode-hook (lambda ()
+                                 (turn-on-haskell-indent)
+                                 (define-key haskell-mode-map (kbd "C-c C-c") 'recompile))))
 
 (defun init-go-mode ()
   (require 'go-mode)
@@ -178,7 +179,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- `(default ((t (:family ,*font-family* :foundry "unknown" :slant normal :weight normal :height ,*font-height* :width normal))))
+ '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 120 :width normal))))
+ '(gnus-header-from ((t (:inherit message-header-other-face :foreground "medium violet red" :weight normal))))
+ '(gnus-header-subject ((t (:inherit message-header-subject :weight normal))))
  '(magit-diff-context-highlight ((t (:inherit nil))))
  '(magit-section-highlight ((t (:inherit highlight)))))
 (custom-set-variables
@@ -189,4 +192,7 @@
  '(custom-enabled-themes (quote (sanityinc-solarized-dark)))
  '(custom-safe-themes
    (quote
-    ("4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" "4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" default))))
+    ("4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" "4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" default)))
+ '(send-mail-function (quote smtpmail-send-it))
+ '(smtpmail-smtp-server "smtp.gmail.com")
+ '(smtpmail-smtp-service 25 t))
