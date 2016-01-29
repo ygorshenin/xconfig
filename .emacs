@@ -4,11 +4,14 @@
                            clang-format google-c-style
                            haskell-mode go-mode slime helm helm-projectile))
 (defvar *font-family* (if (is-osx)
-                          "Monaco"
-                          "DejaVu Sans Mono"))
+                          "Courier New"
+                        "DejaVu Sans Mono"))
 (defvar *font-height* (if (is-osx)
-                          160
-                          120))
+                          240
+                        120))
+
+(when (is-osx)
+  (setq mac-allow-anti-aliasing nil))
 
 (defun init-packages ()
   (package-initialize)
@@ -63,8 +66,10 @@
   (require 'clang-format)
   (require 'google-c-style)
 
-  (if (not (is-osx))
-      (setq clang-format-executable "~/coding/llvm-3.6.1/build/bin/clang-format"))
+  (if (is-osx)
+      (setq clang-format-executable "/usr/local/bin/clang-format")
+    (setq clang-format-executable "~/coding/llvm-3.6.1/build/bin/clang-format"))
+
   (add-hook 'c-mode-common-hook 'google-set-c-style)
   (add-hook 'c-mode-common-hook 'google-make-newline-indent)
 
@@ -179,7 +184,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 120 :width normal))))
+ `(default ((t (:family ,*font-family* :foundry "unknown" :slant normal :weight normal :height ,*font-height* :width normal))))
  '(gnus-header-from ((t (:inherit message-header-other-face :foreground "medium violet red" :weight normal))))
  '(gnus-header-subject ((t (:inherit message-header-subject :weight normal))))
  '(magit-diff-context-highlight ((t (:inherit nil))))

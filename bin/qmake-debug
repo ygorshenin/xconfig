@@ -2,18 +2,25 @@
 
 if [ -z ${QMAKE:-} ]
 then
-    QMAKE=$(which qmake)
+    if [ -x "$HOME/Qt/5.5/clang_64/bin/qmake" ]
+    then
+        QMAKE="$HOME/Qt/5.5/clang_64/bin/qmake"
+    else
+        QMAKE=$(which qmake)
+    fi
 fi
 
 SPEC=${SPEC:-linux-clang-libc++}
 
-readonly LFLAGS="-L/usr/lib -lprofiler"
-
 set -e -x
-
-"$QMAKE" \
-    -spec "$SPEC" \
-    CONFIG+=debug \
-    DEFINES+=USE_GOOGLE_PROFILER \
-    QMAKE_LFLAGS*="$LFLAGS" \
-    "$@"
+case "$SPEC" in
+     linux*) "$QMAKE" \
+                 -spec "$SPEC" \
+                 CONFIG+=debug \
+                 DEFINES+=USE_GOOGLE_PROFILER \
+                 QMAKE_LFLAGS*="$LFLAGS" \
+                 "$@"
+             ;;
+          *) "$QMAKE" -spec "$SPEC" CONFIG+=debug "$@"
+             ;;
+esac
