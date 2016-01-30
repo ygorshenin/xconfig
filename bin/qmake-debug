@@ -2,12 +2,7 @@
 
 if [ -z ${QMAKE:-} ]
 then
-    if [ -x "$HOME/Qt/5.5/clang_64/bin/qmake" ]
-    then
-        QMAKE="$HOME/Qt/5.5/clang_64/bin/qmake"
-    else
-        QMAKE=$(which qmake)
-    fi
+    QMAKE=$(which qmake)
 fi
 
 SPEC=${SPEC:-linux-clang-libc++}
