@@ -64,11 +64,14 @@
       gnus-thread-sort-functions '(gnus-thread-sort-by-number (not gnus-thread-sort-by-date))
 
       gnus-sum-thread-tree-false-root ""
+      gnus-sum-thread-tree-false-root "▷ "
       gnus-sum-thread-tree-indent " "
-      gnus-sum-thread-tree-leaf-with-other "├► "
-      gnus-sum-thread-tree-root ""
-      gnus-sum-thread-tree-single-leaf "╰► "
-      gnus-sum-thread-tree-vertical "│"
+      gnus-sum-thread-tree-leaf-with-other "├─►"
+      gnus-sum-thread-tree-root "● "
+      gnus-sum-thread-tree-single-indent ""
+      gnus-sum-thread-tree-single-indent ""
+      gnus-sum-thread-tree-single-leaf "└─►"
+      gnus-sum-thread-tree-vertical "│ "
 
       gnus-summary-display-arrow t
       gnus-summary-line-format "%0{%U%R%z%}%3{│%} %1{%d%} %3{│%}  %4{%-20,20f%}  %3{│%} %1{%B%}%s\n"
