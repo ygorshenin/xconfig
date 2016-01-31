@@ -1,21 +1,33 @@
 #!/bin/bash
 
-if [ -z ${QMAKE:-} ]
-then
-    QMAKE=$(which qmake)
-fi
+readonly LINUX_QMAKE_PATH="$HOME/Qt/5.5/gcc_64/bin/qmake"
+readonly MACX_QMAKE_PATH="$HOME/Qt/5.5/clang_64/bin/qmake"
 
-SPEC=${SPEC:-linux-clang-libc++}
+case $(uname) in
+    Linux) SPEC=linux-clang-libc++
 
-set -e -x
-case "$SPEC" in
-     linux*) "$QMAKE" \
-                 -spec "$SPEC" \
-                 CONFIG+=debug \
-                 DEFINES+=USE_GOOGLE_PROFILER \
-                 QMAKE_LFLAGS*="$LFLAGS" \
-                 "$@"
-             ;;
-          *) "$QMAKE" -spec "$SPEC" CONFIG+=debug "$@"
-             ;;
+           if [ -x "$LINUX_QMAKE_PATH" ]
+           then
+               QMAKE="$LINUX_QMAKE_PATH"
+           fi
+
+           set -e -x
+           "$QMAKE" -spec "$SPEC" CONFIG+=debug \
+                    DEFINES+=USE_GOOGLE_PROFILER \
+                    QMAKE_LFLAGS*="-lprofiler" \
+                    "$@"
+           ;;
+     mac*) SPEC=macx-clang
+
+           if [ -x "$MACX_QMAKE_PATH" ]
+           then
+               QMAKE="$MACX_QMAKE_PATH"
+           fi
+
+           set -e -x
+           "$QMAKE" -spec "$SPEC" CONFIG+=debug "$@"
+           ;;
+        *) echo "Can't recognize system" 2>&1
+           exit -1
+           ;;
 esac
