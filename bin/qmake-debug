@@ -17,7 +17,7 @@ case $(uname) in
                     QMAKE_LFLAGS*="-lprofiler" \
                     "$@"
            ;;
-     mac*) SPEC=macx-clang
+   Darwin) SPEC=macx-clang
 
            if [ -x "$MACX_QMAKE_PATH" ]
            then

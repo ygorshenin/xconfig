@@ -113,7 +113,8 @@
   (helm-mode 1)
 
   (projectile-global-mode)
-  (setq projectile-completion-system 'helm)
+  (setq projectile-completion-system 'helm
+        projectile-indexing-method 'alien)
   (helm-projectile-on))
 
 (defun init-magit-mode ()
@@ -136,7 +137,13 @@
 (defun toggle-dark-light ()
   "Switches between dark and light solarized themes."
   (interactive)
-  (cond ((find 'sanityinc-solarized-dark custom-enabled-themes)
+  (cond ((find 'solarized custom-enabled-themes)
+         (disable-theme 'solarized)
+         (ecase frame-background-mode
+           ((nil light) (customize-set-variable 'frame-background-mode 'dark))
+           ((dark) (customize-set-variable 'frame-background-mode 'light)))
+         (load-theme 'solarized))
+        ((find 'sanityinc-solarized-dark custom-enabled-themes)
          (disable-theme 'sanityinc-solarized-dark)
          (load-theme 'sanityinc-solarized-light t))
         ((find 'sanityinc-solarized-light custom-enabled-themes)
@@ -148,7 +155,8 @@
   (require 'color-theme-solarized)
   (require 'color-theme-sanityinc-solarized)
   (set-frame-parameter nil 'background-mode 'dark)
-  (load-theme 'sanityinc-solarized-dark t)
+  (load-theme 'solarized)
+  ;; (load-theme 'sanityinc-solarized-dark t)
   (global-set-key (kbd "<f11>") 'toggle-dark-light))
 
 (defun init-snippets ()
@@ -184,7 +192,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- `(default ((t (:family ,*font-family* :foundry "unknown" :slant normal :weight normal :height ,*font-height* :width normal))))
+ '(default ((t (:family "Courier New" :foundry "unknown" :slant normal :weight normal :height 240 :width normal))))
  '(gnus-header-from ((t (:inherit message-header-other-face :foreground "medium violet red" :weight normal))))
  '(gnus-header-subject ((t (:inherit message-header-subject :weight normal))))
  '(magit-diff-context-highlight ((t (:inherit nil))))
@@ -194,11 +202,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes (quote (sanityinc-solarized-dark)))
  '(custom-safe-themes
    (quote
-    ("4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" "4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" default)))
- '(password-cache-expiry nil)
- '(send-mail-function (quote smtpmail-send-it))
- '(smtpmail-smtp-server "smtp.gmail.com")
- '(smtpmail-smtp-service 25 t))
+    ("8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" default))))
