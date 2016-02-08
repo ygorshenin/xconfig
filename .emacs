@@ -198,7 +198,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(gnus-group-mail-1 ((t (:foreground "gray53" :weight bold))))
+ '(gnus-group-mail-3 ((t (:foreground "SkyBlue3" :weight bold))))
+ '(gnus-group-mail-3-empty ((t (:foreground "DeepSkyBlue4"))))
  '(gnus-header-from ((t (:inherit message-header-other-face :foreground "medium violet red" :weight normal))))
  '(gnus-header-subject ((t (:inherit message-header-subject :weight normal))))
+ '(gnus-summary-normal-ticked ((t (:foreground "SteelBlue4"))))
  '(magit-diff-context-highlight ((t (:inherit nil))))
  '(magit-section-highlight ((t (:inherit highlight)))))
