@@ -27,7 +27,6 @@ genericWorkspaces = map (\d -> "0x" ++ (show d) ++ ":generic") [4..8]
 mediaWorkspaces   = ["0x9:media"]
 myWorkspaces = concat [codeWorkspaces, webWorkspaces, genericWorkspaces, mediaWorkspaces]
 
-onStartup :: X ()
 onStartup = do
   setWMName "LG3D"  -- need for correct Java Swing applications work
   spawnOn (head codeWorkspaces) "emacs"
@@ -39,18 +38,18 @@ main = do
   spawn "amixer get Master | awk -f ~/bin/amixer_status.awk >/tmp/.volume"
   let layout = onWorkspaces (codeWorkspaces ++ mediaWorkspaces) (noBorders $ Full) $
                avoidStruts .
-               smartBorders $ layoutHook defaultConfig
-  xmonad $ defaultConfig { manageHook  = manageSpawn <+> manageDocks <+> manageHook defaultConfig
-                         , workspaces  = myWorkspaces
-                         , startupHook = onStartup
-                         , layoutHook  = layout
-                         , logHook     = dynamicLogWithPP xmobarPP
-                                         { ppOutput = hPutStrLn xmobar
-                                         , ppTitle = xmobarColor "green" "" . shorten 50
-                                         }
-                         , modMask     = mod4Mask
-                         , terminal    = "xterm"
-                         } `additionalKeys`
+               smartBorders $ layoutHook def
+  xmonad $ def { manageHook  = manageSpawn <+> manageDocks <+> manageHook def
+               , workspaces  = myWorkspaces
+               , startupHook = onStartup
+               , layoutHook  = layout
+               , logHook     = dynamicLogWithPP xmobarPP
+                               { ppOutput = hPutStrLn xmobar
+                               , ppTitle = xmobarColor "green" "" . shorten 50
+                               }
+               , modMask     = mod4Mask
+               , terminal    = "xterm"
+               } `additionalKeys`
     [ ((controlMask, xK_Shift_L), switchLayout)
     , ((mod4Mask .|. shiftMask, xK_l), spawn "screenlock")
     , ((mod4Mask .|. shiftMask, xK_g), spawn "google-chrome-stable")
