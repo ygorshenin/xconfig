@@ -6,10 +6,7 @@
                            w3m))
 (defvar *font-family* (if (is-osx)
                           "Courier New"
-                        "DejaVu Sans Mono"))
-(defvar *font-height* (if (is-osx)
-                          240
-                        120))
+                        "DejaVu Sans Mono-14"))
 
 (defvar *browser-program* (if (is-osx) "open" "google-chrome"))
 
@@ -188,26 +185,20 @@
 (init-helm-mode)
 (init-magit-mode)
 (when window-system
+  (add-to-list 'default-frame-alist `(font . ,*font-family*))
+  (set-face-attribute 'default t :font *font-family*)
   (init-fullscreen)
   (init-color-theme))
 (init-snippets)
 
 (shell)
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Courier New" :foundry "unknown" :slant normal :weight normal :height 240 :width normal))))
  '(gnus-header-from ((t (:inherit message-header-other-face :foreground "medium violet red" :weight normal))))
  '(gnus-header-subject ((t (:inherit message-header-subject :weight normal))))
  '(magit-diff-context-highlight ((t (:inherit nil))))
  '(magit-section-highlight ((t (:inherit highlight)))))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" default))))
