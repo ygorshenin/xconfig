@@ -2,7 +2,8 @@
 
 (defvar *packages* '(magit color-theme color-theme-solarized color-theme-sanityinc-solarized
                            clang-format google-c-style
-                           haskell-mode go-mode slime helm helm-projectile))
+                           haskell-mode go-mode slime helm helm-projectile
+                           w3m))
 (defvar *font-family* (if (is-osx)
                           "Courier New"
                         "DejaVu Sans Mono"))
@@ -10,8 +11,12 @@
                           240
                         120))
 
+(defvar *browser-program* (if (is-osx) "open" "google-chrome"))
+
+(add-to-list 'exec-path "/usr/local/bin")
+
 (when (is-osx)
-  (setq mac-allow-anti-aliasing nil))
+  (setq mac-allow-anti-aliasing t))
 
 (defun init-packages ()
   (package-initialize)
@@ -48,7 +53,7 @@
   (setq indent-line-function 'insert-tab
         compilation-scroll-output 'first-error
         browse-url-browser-function 'browse-url-generic
-        browse-url-generic-program "google-chrome")
+        browse-url-generic-program *browser-program*)
   (put 'upcase-region 'disabled nil)
   (global-set-key (kbd "C-c C-l") 'sort-lines)
   (global-set-key (kbd "C-c l") 'sort-lines)
@@ -66,8 +71,8 @@
   (require 'clang-format)
   (require 'google-c-style)
 
-  (if (is-osx)
-      (setq clang-format-executable "/usr/local/bin/clang-format")
+  ; On Debian I prefer to use custom clang-format build.
+  (unless (is-osx)
     (setq clang-format-executable "~/coding/llvm-3.6.1/build/bin/clang-format"))
 
   (add-hook 'c-mode-common-hook 'google-set-c-style)
@@ -154,7 +159,7 @@
   (require 'color-theme)
   (require 'color-theme-solarized)
   (require 'color-theme-sanityinc-solarized)
-  (set-frame-parameter nil 'background-mode 'dark)
+  (customize-set-variable 'frame-background-mode 'light)
   (load-theme 'solarized)
   ;; (load-theme 'sanityinc-solarized-dark t)
   (global-set-key (kbd "<f11>") 'toggle-dark-light))
@@ -182,9 +187,10 @@
 (init-rcirc)
 (init-helm-mode)
 (init-magit-mode)
-(init-color-theme)
+(when window-system
+  (init-fullscreen)
+  (init-color-theme))
 (init-snippets)
-(init-fullscreen)
 
 (shell)
 (custom-set-faces

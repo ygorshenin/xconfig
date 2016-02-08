@@ -1,7 +1,12 @@
 (require 'nnir)
 (require 'smtpmail)
+(require 'w3m)
 
+;;; Declares *authinfo* (path to authinfo file), *full-name*,
+;;; *posting-styles* and *smtp-accounts* variables.
 (load-file "~/.personal.el")
+
+(defun is-osx () (string= "darwin" system-type))
 
 (setq send-mail-function 'smtpmail-send-it
       message-send-mail-function 'smtpmail-send-it
@@ -43,10 +48,9 @@
 (setq gnus-posting-styles *posting-styles*)
 
 (setq user-full-name *full-name*
-      mml2015-signers (list *signature*)
-      nntp-authinfo-file "~/.authinfo.gpg"
+      nntp-authinfo-file *authinfo*
 
-      ;;; foo and bar are used here because I'm using two gmail
+      ;;; Foo and bar are used here because I'm using only two gmail
       ;;; accounts in gnus.
       gnus-select-method '(nnimap "foo"
                                   (nnimap-address "imap.gmail.com")
@@ -58,8 +62,6 @@
                                               (nnimap-server-port 993)
                                               (nnimap-stream ssl)
                                               (nnir-search-engine imap)))
-
-      mml2015-encrypt-to-self t
 
       gnus-thread-sort-functions '(gnus-thread-sort-by-number (not gnus-thread-sort-by-date))
 
@@ -84,4 +86,10 @@
 
       gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
 
-(add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
+(setq mm-text-html-renderer 'w3m)
+(setq mm-inline-text-html-with-images t)
+
+(unless (is-osx)
+  (setq mml2015-signers (list *signature*)
+        mml2015-encrypt-to-self t)
+  (add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime))
