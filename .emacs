@@ -5,7 +5,7 @@
                            haskell-mode go-mode slime helm helm-projectile
                            w3m))
 (defvar *font-family* (if (is-osx)
-                          "Courier New"
+                          "Courier New-24"
                         "DejaVu Sans Mono-14"))
 
 (defvar *browser-program* (if (is-osx) "open" "google-chrome"))
