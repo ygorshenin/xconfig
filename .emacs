@@ -6,7 +6,7 @@
                            w3m))
 (defvar *font-family* (if (is-osx)
                           "Courier New-24"
-                        "DejaVu Sans Mono-14"))
+                        "DejaVu Sans Mono-12"))
 
 (defvar *browser-program* (if (is-osx) "open" "google-chrome"))
 
@@ -89,7 +89,9 @@
   (require 'haskell-mode)
   (add-hook 'haskell-mode-hook (lambda ()
                                  (turn-on-haskell-indent)
-                                 (define-key haskell-mode-map (kbd "C-c C-c") 'recompile))))
+                                 (define-key haskell-mode-map (kbd "C-c C-c") 'recompile)))
+  (load-file (let ((coding-system-for-read 'utf-8))
+                (shell-command-to-string "agda-mode locate"))))
 
 (defun init-go-mode ()
   (require 'go-mode)
@@ -154,11 +156,12 @@
 
 (defun init-color-theme ()
   (require 'color-theme)
+  (require 'color-theme-zenburn)
   (require 'color-theme-solarized)
   (require 'color-theme-sanityinc-solarized)
-  (customize-set-variable 'frame-background-mode 'light)
-  (load-theme 'solarized)
-  ;; (load-theme 'sanityinc-solarized-dark t)
+  ;; (customize-set-variable 'frame-background-mode 'light)
+  ;; (load-theme 'solarized)
+  (load-theme 'zenburn t)
   (global-set-key (kbd "<f11>") 'toggle-dark-light))
 
 (defun init-snippets ()
@@ -181,7 +184,7 @@
 (init-clisp-mode)
 (init-haskell-mode)
 (init-go-mode)
-(init-rcirc)
+;; (init-rcirc)
 (init-helm-mode)
 (init-magit-mode)
 (when window-system
