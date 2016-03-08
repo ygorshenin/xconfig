@@ -5,7 +5,7 @@
                            haskell-mode go-mode slime helm helm-projectile
                            w3m))
 (defvar *font-family* (if (is-osx)
-                          "Courier New-24"
+                          "Monaco-18"
                         "DejaVu Sans Mono-12"))
 
 (defvar *browser-program* (if (is-osx) "open" "google-chrome"))
@@ -81,7 +81,7 @@
 
 (defun init-clisp-mode ()
   (require 'slime)
-  (setq inferior-lisp-program "/usr/bin/sbcl"
+  (setq slime-lisp-implementations `((sbcl (,(if (is-osx) "/usr/local/bin/sbcl" "/usr/bin/sbcl")) :coding-system utf-8-unix))
         common-lisp-hyperspec-root "/usr/share/doc/hyperspec/")
   (global-set-key [(f2)] 'slime-hyperspec-lookup))
 
@@ -90,8 +90,11 @@
   (add-hook 'haskell-mode-hook (lambda ()
                                  (turn-on-haskell-indent)
                                  (define-key haskell-mode-map (kbd "C-c C-c") 'recompile)))
-  (load-file (let ((coding-system-for-read 'utf-8))
-                (shell-command-to-string "agda-mode locate"))))
+  (cond ((is-osx)
+         (load-file "/Users/y.gorshenin/Library/Haskell/share/ghc-7.10.3-x86_64/Agda-2.4.2.5/emacs-mode/agda2.el")
+         (setq agda2-program-name "/Users/y.gorshenin/Library/Haskell/bin/agda"))
+        (t (load-file (let ((coding-system-for-read 'utf-8))
+                        (shell-command-to-string "agda-mode locate"))))))
 
 (defun init-go-mode ()
   (require 'go-mode)
@@ -156,7 +159,6 @@
 
 (defun init-color-theme ()
   (require 'color-theme)
-  (require 'color-theme-zenburn)
   (require 'color-theme-solarized)
   (require 'color-theme-sanityinc-solarized)
   ;; (customize-set-variable 'frame-background-mode 'light)
