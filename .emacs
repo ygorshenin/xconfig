@@ -3,7 +3,7 @@
 (defvar *packages* '(magit color-theme color-theme-solarized color-theme-sanityinc-solarized
                            clang-format google-c-style
                            haskell-mode go-mode slime helm helm-projectile
-                           w3m))
+                           w3m exec-path-from-shell))
 (defvar *font-family* (if (is-osx)
                           "Monaco-18"
                         "DejaVu Sans Mono-12"))
@@ -13,7 +13,8 @@
 (add-to-list 'exec-path "/usr/local/bin")
 
 (when (is-osx)
-  (setq mac-allow-anti-aliasing t))
+  (setq mac-allow-anti-aliasing t)
+  (exec-path-from-shell-ininitalize))
 
 (defun init-packages ()
   (package-initialize)
@@ -161,9 +162,9 @@
   (require 'color-theme)
   (require 'color-theme-solarized)
   (require 'color-theme-sanityinc-solarized)
-  ;; (customize-set-variable 'frame-background-mode 'light)
-  ;; (load-theme 'solarized)
-  (load-theme 'zenburn t)
+  (customize-set-variable 'frame-background-mode 'dark)
+  (load-theme 'solarized)
+  ;; (load-theme 'zenburn t)
   (global-set-key (kbd "<f11>") 'toggle-dark-light))
 
 (defun init-snippets ()
@@ -211,3 +212,12 @@
  '(gnus-summary-normal-ticked ((t (:foreground "SteelBlue4"))))
  '(magit-diff-context-highlight ((t (:inherit nil))))
  '(magit-section-highlight ((t (:inherit highlight)))))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" default)))
+ '(frame-background-mode (quote dark)))
