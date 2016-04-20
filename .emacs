@@ -13,11 +13,12 @@
 (add-to-list 'exec-path "/usr/local/bin")
 
 (when (is-osx)
-  (setq mac-allow-anti-aliasing t)
-  (exec-path-from-shell-ininitalize))
+  (setq mac-allow-anti-aliasing t))
 
 (defun init-packages ()
   (package-initialize)
+  (when (is-osx)
+    (exec-path-from-shell-initialize))
   (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
                            ("marmalade" . "http://marmalade-repo.org/packages/")
                            ("melpa" . "https://melpa.org/packages/"))))
@@ -163,16 +164,10 @@
   (require 'color-theme-solarized)
   (require 'color-theme-sanityinc-solarized)
   (customize-set-variable 'frame-background-mode 'dark)
-  (load-theme 'solarized)
-  ;; (load-theme 'zenburn t)
+  (if (is-osx)
+      (load-theme 'sanityinc-solarized-dark)
+    (load-theme 'zenburn t))
   (global-set-key (kbd "<f11>") 'toggle-dark-light))
-
-(defun init-snippets ()
-  (require 'yasnippet)
-  (setq yas-snippet-dirs (list "~/.emacs.d/snippets")
-	yas-prompt-functions
-        '(yas-dropdown-prompt yas-completing-prompt yas-maybe-ido-prompt yas-no-prompt))
-  (yas-global-mode 1))
 
 (defun init-fullscreen ()
   (set-frame-parameter nil 'fullscreen 'fullboth)
@@ -195,7 +190,6 @@
   (set-face-attribute 'default t :font *font-family*)
   (init-fullscreen)
   (init-color-theme))
-(init-snippets)
 
 (shell)
 
@@ -219,5 +213,5 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" default)))
+    ("4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" default)))
  '(frame-background-mode (quote dark)))
