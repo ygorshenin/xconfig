@@ -91,12 +91,7 @@
   (require 'haskell-mode)
   (add-hook 'haskell-mode-hook (lambda ()
                                  (turn-on-haskell-indent)
-                                 (define-key haskell-mode-map (kbd "C-c C-c") 'recompile)))
-  (cond ((is-osx)
-         (load-file "/Users/y.gorshenin/Library/Haskell/share/ghc-7.10.3-x86_64/Agda-2.4.2.5/emacs-mode/agda2.el")
-         (setq agda2-program-name "/Users/y.gorshenin/Library/Haskell/bin/agda"))
-        (t (load-file (let ((coding-system-for-read 'utf-8))
-                        (shell-command-to-string "agda-mode locate"))))))
+                                 (define-key haskell-mode-map (kbd "C-c C-c") 'recompile))))
 
 (defun init-go-mode ()
   (require 'go-mode)
@@ -130,19 +125,6 @@
   (require 'magit)
   (global-set-key (kbd "C-c C-g") 'magit-status))
 
-(defun init-rcirc ()
-  (require 'rcirc)
-  (setq rcirc-default-nick "ygorshenin"
-        rcirc-default-user-name "ygorshenin"
-        rcirc-default-full-name "Yuri Gorshenin")
-  (rcirc-track-minor-mode 1)
-  (add-to-list 'rcirc-server-alist
-               '("irc.oftc.net"
-                 :channels ("#llvm")))
-  (add-to-list 'rcirc-server-alist
-               '("irc.freenode.net"
-                 :channels ("#chromium"))))
-
 (defun toggle-dark-light ()
   "Switches between dark and light solarized themes."
   (interactive)
@@ -163,7 +145,9 @@
   (require 'color-theme)
   (require 'color-theme-solarized)
   (require 'color-theme-sanityinc-solarized)
-  (customize-set-variable 'frame-background-mode 'dark)
+  ;; (customize-set-variable 'frame-background-mode 'dark)
+  ;; (load-theme 'solarized)
+  ;; (load-theme 'sanityinc-solarized-dark)
   (if (is-osx)
       (load-theme 'sanityinc-solarized-dark)
     (load-theme 'zenburn t))
@@ -182,7 +166,6 @@
 (init-clisp-mode)
 (init-haskell-mode)
 (init-go-mode)
-;; (init-rcirc)
 (init-helm-mode)
 (init-magit-mode)
 (when window-system
