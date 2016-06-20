@@ -1,21 +1,34 @@
 #!/bin/bash
 
-if [ -z ${QMAKE:-} ]
-then
-    QMAKE=$(which qmake)
-fi
-
-SPEC=${SPEC:-linux-clang-libc++}
+readonly LINUX_QMAKE_PATH="$HOME/Qt/5.5/gcc_64/bin/qmake"
+readonly MACX_QMAKE_PATH="$HOME/Qt/5.5/clang_64/bin/qmake"
 
 readonly CFLAGS="-fsanitize=address -fno-omit-frame-pointer"
 readonly LFLAGS="-fsanitize=address"
 
-set -e -x
+case $(uname) in
+    Linux) SPEC=linux-clang-libc++
 
-"$QMAKE" \
-    -spec "$SPEC" \
-    CONFIG+=debug \
-    QMAKE_CFLAGS+="$CFLAGS" \
-    QMAKE_CXXFLAGS*="$CFLAGS" \
-    QMAKE_LFLAGS*="$LFLAGS" \
-    "$@"
+           if [ -x "$LINUX_QMAKE_PATH" ]
+           then
+               QMAKE="$LINUX_QMAKE_PATH"
+           fi
+           ;;
+   Darwin) SPEC=macx-clang
+
+           if [ -x "$MACX_QMAKE_PATH" ]
+           then
+               QMAKE="$MACX_QMAKE_PATH"
+           fi
+           ;;
+        *) echo "Can't recognize system" 2>&1
+           exit -1
+           ;;
+esac
+
+set -e -x
+"$QMAKE" -spec "$SPEC" CONFIG+=debug \
+         QMAKE_CXXFLAGS*="$CFLAGS" \
+         QMAKE_CLFAGS*="$CFLAGS" \
+         QMAKE_LFLAGS*="$LFLAGS" \
+         "$@"

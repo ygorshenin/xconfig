@@ -118,7 +118,8 @@
 
   (projectile-global-mode)
   (setq projectile-completion-system 'helm
-        projectile-indexing-method 'alien)
+        projectile-indexing-method 'native
+        projectile-enable-caching t)
   (helm-projectile-on))
 
 (defun init-magit-mode ()
