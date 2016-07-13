@@ -11,6 +11,7 @@
 (defvar *browser-program* (if (is-osx) "open" "google-chrome"))
 
 (add-to-list 'exec-path "/usr/local/bin")
+(add-to-list 'exec-path "~/bin")
 
 (when (is-osx)
   (setq mac-allow-anti-aliasing t))
@@ -72,7 +73,7 @@
 
   ; On Debian I prefer to use custom clang-format build.
   (unless (is-osx)
-    (setq clang-format-executable "~/coding/llvm-3.6.1/build/bin/clang-format"))
+    (setq clang-format-executable "~/coding/llvm-cmake-build/bin/clang-format"))
 
   (add-hook 'c-mode-common-hook 'google-set-c-style)
   (add-hook 'c-mode-common-hook 'google-make-newline-indent)
@@ -118,7 +119,8 @@
 
   (projectile-global-mode)
   (setq projectile-completion-system 'helm
-        projectile-indexing-method 'alien)
+        projectile-use-git-grep t
+        projectile-enable-caching t)
   (helm-projectile-on))
 
 (defun init-magit-mode ()
@@ -143,15 +145,13 @@
 
 (defun init-color-theme ()
   (require 'color-theme)
-  (require 'color-theme-solarized)
-  (require 'color-theme-sanityinc-solarized)
-  ;; (customize-set-variable 'frame-background-mode 'dark)
-  ;; (load-theme 'solarized)
-  ;; (load-theme 'sanityinc-solarized-dark)
-  (if (is-osx)
-      (load-theme 'sanityinc-solarized-dark)
-    (load-theme 'zenburn t))
-  (global-set-key (kbd "<f11>") 'toggle-dark-light))
+  (cond ((is-osx)
+         (customize-set-variable 'frame-background-mode 'dark)
+         (require 'color-theme-sanityinc-solarized)
+         (load-theme 'sanityinc-solarized-dark)
+         (load-theme 'sanityinc-solarized-dark)
+         (global-set-key (kbd "<f11>") 'toggle-dark-light))
+        (t (load-theme 'zenburn t))))
 
 (defun init-fullscreen ()
   (set-frame-parameter nil 'fullscreen 'fullboth)
@@ -176,19 +176,28 @@
 
 (shell)
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(gnus-group-mail-1 ((t (:foreground "gray53" :weight bold))))
- '(gnus-group-mail-3 ((t (:foreground "SkyBlue3" :weight bold))))
- '(gnus-group-mail-3-empty ((t (:foreground "DeepSkyBlue4"))))
- '(gnus-header-from ((t (:inherit message-header-other-face :foreground "medium violet red" :weight normal))))
- '(gnus-header-subject ((t (:inherit message-header-subject :weight normal))))
- '(gnus-summary-normal-ticked ((t (:foreground "SteelBlue4"))))
- '(magit-diff-context-highlight ((t (:inherit nil))))
- '(magit-section-highlight ((t (:inherit highlight)))))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(gnus-group-mail-1 ((t (:foreground "gray53" :weight bold))))
+;;  '(gnus-group-mail-3 ((t (:foreground "SkyBlue3" :weight bold))))
+;;  '(gnus-group-mail-3-empty ((t (:foreground "DeepSkyBlue4"))))
+;;  '(gnus-header-from ((t (:inherit message-header-other-face :foreground "medium violet red" :weight normal))))
+;;  '(gnus-header-subject ((t (:inherit message-header-subject :weight normal))))
+;;  '(gnus-summary-normal-ticked ((t (:foreground "SteelBlue4"))))
+;;  '(magit-diff-context-highlight ((t (:inherit nil))))
+;;  '(magit-section-highlight ((t (:inherit highlight)))))
+;; (custom-set-variables
+;;  ;; custom-set-variables was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(custom-safe-themes
+;;    (quote
+;;     ("4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" default)))
+;;  '(frame-background-mode (quote dark)))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -196,5 +205,11 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" default)))
+    ("4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" default)))
  '(frame-background-mode (quote dark)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

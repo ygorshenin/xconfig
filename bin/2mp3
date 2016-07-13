@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for file in "$@"
+do
+    avconv -i "$file" -ab 320k "${file%.flac}.mp3"
+done
