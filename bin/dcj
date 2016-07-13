@@ -1,0 +1,13 @@
+#!/bin/bash
+
+DIR="$HOME/coding/dcj"
+
+if [ ! -d "$DIR" ]
+then
+    echo "$DIR does not exist." 1>&2
+    exit -1
+fi
+
+PYTHON="/usr/bin/python2.7"
+
+$PYTHON $DIR/dcj.py $@

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for file in "$@"
+do
+    avconv -i "$file" "${file%.flac}.wav"
+done

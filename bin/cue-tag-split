@@ -1,0 +1,60 @@
+#!/bin/bash
+
+usage() {
+    echo "Usage: $0 cue-file audio-file" 1>&2
+}
+
+case $# in
+    2) CUEFILE="$1"
+       AUDIOFILE="$2"
+       ;;
+    *) usage
+       exit -1
+       ;;
+esac
+
+if [ ! -f "$CUEFILE" ]
+then
+    echo "$CUEFILE is not a regular file." 2>&1
+    echo
+    usage
+    exit -1
+fi
+
+if [ ! -f "$AUDIOFILE" ]
+then
+    echo "$AUDIOFILE is not a regular file." 2>&1
+    echo
+    usage
+    exit -1
+fi
+
+ARTIST=$(cat "$CUEFILE" | sed -n 's/PERFORMER \(.*\)/\1/p' | head -1 | sed 's/^"//g;s/"$//g')
+ALBUM=$(cat "$CUEFILE" | sed -n 's/TITLE \(.*\)/\1/p' | head -1 | sed 's/^"//g;s/"$//g')
+
+echo "Splitting $ALBUM by $ARTIST..."
+
+time[0]="00:00.00"
+num_parts=1
+for ts in $(cuebreakpoints "$CUEFILE")
+do
+    time[$num_parts]="$ts"
+    num_parts=$((num_parts+1))
+done
+time[$num_parts]="-0"
+num_parts=$((num_parts+1))
+
+for i in $(seq 0 $((num_parts-2)))
+do
+    track=$(printf "%02d" $((i+1)))
+    title=$(cueprint --track-number "$track" -t "%t" "$CUEFILE")
+    flac --silent \
+         --exhaustive-model-search \
+         --skip="${time[$i]}" \
+         --until="${time[$(($i+1))]}" \
+         --tag=ARTIST="$ARTIST" \
+         --tag=ALBUM="$ALBUM" \
+         --tag=TITLE="$title" \
+         --tag=TRACKNUMBER="$track" \
+         "$AUDIOFILE" --output-name="$track - $title.flac"
+done
