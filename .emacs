@@ -1,3 +1,5 @@
+(require 'cl)
+
 (defun is-osx () (string= "darwin" system-type))
 
 (defvar *packages* '(magit color-theme color-theme-solarized color-theme-sanityinc-solarized
@@ -9,6 +11,55 @@
                         "DejaVu Sans Mono-12"))
 
 (defvar *browser-program* (if (is-osx) "open" "google-chrome"))
+
+(cl-defstruct theme name (background-mode nil))
+
+(defvar *color-themes* (list (make-theme :name 'zenburn :background-mode 'nil)
+                             (make-theme :name 'solarized-dark :background-mode 'dark)
+                             (make-theme :name 'solarized-light :background-mode 'light)
+                             (make-theme :name 'sanityinc-solarized-dark :background-mode 'dark)
+                             (make-theme :name 'sanityinc-solarized-light :background-mode 'light))
+  "A list of my favourite color themes.")
+
+(cl-defun is-current-color-theme? (theme)
+  "Returns t if theme is enabled now."
+  (let ((background (theme-background-mode theme)))
+    (and (find (theme-name theme) custom-enabled-themes)
+         (or (null background)
+             (equal background frame-background-mode)))))
+
+(cl-defun get-curr-color-theme (themes)
+  "Returns currently-enabled color theme from themes. If there is no
+   such theme, returns the first theme from *color-themes*."
+  (when (null themes)
+    (return-from get-curr-color-theme (first *color-themes*)))
+  (let ((theme (first themes)))
+    (if (is-current-color-theme? theme)
+        theme
+      (get-curr-color-theme (cdr themes)))))
+
+(cl-defun get-next-color-theme (themes)
+  "Returns the theme after the currently-enabled color theme. If there is no
+   such theme, returns the first theme from *color-themes*."
+  (when (null themes)
+    (cl-return-from get-next-color-theme (first *color-themes*)))
+  (let ((theme (first themes)))
+    (if (is-current-color-theme? theme)
+        (if (null (cdr themes))
+            (first *color-themes*)
+          (second themes))
+      (get-next-color-theme (cdr themes)))))
+
+(cl-defun disable-color-theme (theme)
+  (disable-theme (theme-name theme))
+  (customize-set-variable 'frame-background-mode nil))
+
+(cl-defun enable-color-theme (theme)
+  (let ((name (theme-name theme))
+        (background (theme-background-mode theme)))
+    (load-theme name t)
+    (when background
+      (customize-set-variable 'frame-background-mode background))))
 
 (add-to-list 'exec-path "/usr/local/bin")
 (add-to-list 'exec-path "~/bin")
@@ -120,38 +171,38 @@
   (projectile-global-mode)
   (setq projectile-completion-system 'helm
         projectile-use-git-grep t
-        projectile-enable-caching t)
+        projectile-enable-caching t
+        projectile-indexing-method 'native)
   (helm-projectile-on))
 
 (defun init-magit-mode ()
   (require 'magit)
   (global-set-key (kbd "C-c C-g") 'magit-status))
 
-(defun toggle-dark-light ()
-  "Switches between dark and light solarized themes."
+(cl-defun init-writeroom-mode ()
+  (setq writeroom-width 100
+        writeroom-major-modes '(c++-mode c-mode
+                                         java-mode
+                                         haskell-mode
+                                         lisp-mode
+                                         gnus-summary-mode gnus-group-mode gnus-article-mode
+                                         text-mode)
+        writeroom-mode-line 't)
+
+  (global-writeroom-mode 1))
+
+(defun switch-color-theme ()
   (interactive)
-  (cond ((find 'solarized custom-enabled-themes)
-         (disable-theme 'solarized)
-         (ecase frame-background-mode
-           ((nil light) (customize-set-variable 'frame-background-mode 'dark))
-           ((dark) (customize-set-variable 'frame-background-mode 'light)))
-         (load-theme 'solarized))
-        ((find 'sanityinc-solarized-dark custom-enabled-themes)
-         (disable-theme 'sanityinc-solarized-dark)
-         (load-theme 'sanityinc-solarized-light t))
-        ((find 'sanityinc-solarized-light custom-enabled-themes)
-         (disable-theme 'sanityinc-solarized-light)
-         (load-theme 'sanityinc-solarized-dark t))))
+  (let ((curr-theme (get-curr-color-theme *color-themes*))
+        (next-theme (get-next-color-theme *color-themes*)))
+    (disable-color-theme curr-theme)
+    (enable-color-theme next-theme)))
 
 (defun init-color-theme ()
   (require 'color-theme)
-  (cond ((is-osx)
-         (customize-set-variable 'frame-background-mode 'dark)
-         (require 'color-theme-sanityinc-solarized)
-         (load-theme 'sanityinc-solarized-dark)
-         (load-theme 'sanityinc-solarized-dark)
-         (global-set-key (kbd "<f11>") 'toggle-dark-light))
-        (t (load-theme 'zenburn t))))
+  (require 'color-theme-sanityinc-solarized)
+  (enable-color-theme (second *color-themes*))
+  (global-set-key (kbd "<f11>") 'switch-color-theme))
 
 (defun init-fullscreen ()
   (set-frame-parameter nil 'fullscreen 'fullboth)
@@ -168,6 +219,8 @@
 (init-go-mode)
 (init-helm-mode)
 (init-magit-mode)
+(init-writeroom-mode)
+
 (when window-system
   (add-to-list 'default-frame-alist `(font . ,*font-family*))
   (set-face-attribute 'default t :font *font-family*)
@@ -203,10 +256,81 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline bold bold-italic bold])
+ '(ansi-color-names-vector
+   (vector "#839496" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#eee8d5"))
+ '(compilation-message-face (quote default))
+ '(cua-global-mark-cursor-color "#2aa198")
+ '(cua-normal-cursor-color "#839496")
+ '(cua-overwrite-cursor-color "#b58900")
+ '(cua-read-only-cursor-color "#859900")
  '(custom-safe-themes
    (quote
-    ("4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" default)))
- '(frame-background-mode (quote dark)))
+    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "40f6a7af0dfad67c0d4df2a1dd86175436d79fc69ea61614d668a635c2cd94ab" "4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" default)))
+ '(fci-rule-color "#073642")
+ '(frame-background-mode nil)
+ '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
+ '(highlight-symbol-colors
+   (--map
+    (solarized-color-blend it "#002b36" 0.25)
+    (quote
+     ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
+ '(highlight-symbol-foreground-color "#93a1a1")
+ '(highlight-tail-colors
+   (quote
+    (("#073642" . 0)
+     ("#546E00" . 20)
+     ("#00736F" . 30)
+     ("#00629D" . 50)
+     ("#7B6000" . 60)
+     ("#8B2C02" . 70)
+     ("#93115C" . 85)
+     ("#073642" . 100))))
+ '(hl-bg-colors
+   (quote
+    ("#7B6000" "#8B2C02" "#990A1B" "#93115C" "#3F4D91" "#00629D" "#00736F" "#546E00")))
+ '(hl-fg-colors
+   (quote
+    ("#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36")))
+ '(magit-diff-use-overlays nil)
+ '(nrepl-message-colors
+   (quote
+    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
+ '(pos-tip-background-color "#073642")
+ '(pos-tip-foreground-color "#93a1a1")
+ '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
+ '(term-default-bg-color "#002b36")
+ '(term-default-fg-color "#839496")
+ '(vc-annotate-background nil)
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#dc322f")
+     (40 . "#cb4b16")
+     (60 . "#b58900")
+     (80 . "#859900")
+     (100 . "#2aa198")
+     (120 . "#268bd2")
+     (140 . "#d33682")
+     (160 . "#6c71c4")
+     (180 . "#dc322f")
+     (200 . "#cb4b16")
+     (220 . "#b58900")
+     (240 . "#859900")
+     (260 . "#2aa198")
+     (280 . "#268bd2")
+     (300 . "#d33682")
+     (320 . "#6c71c4")
+     (340 . "#dc322f")
+     (360 . "#cb4b16"))))
+ '(vc-annotate-very-old-color nil)
+ '(weechat-color-list
+   (quote
+    (unspecified "#002b36" "#073642" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#839496" "#657b83")))
+ '(xterm-color-names
+   ["#073642" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#eee8d5"])
+ '(xterm-color-names-bright
+   ["#002b36" "#cb4b16" "#586e75" "#657b83" "#839496" "#6c71c4" "#93a1a1" "#fdf6e3"]))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
