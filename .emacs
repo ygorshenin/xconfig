@@ -5,7 +5,8 @@
 (defvar *packages* '(magit color-theme color-theme-solarized color-theme-sanityinc-solarized
                            clang-format google-c-style
                            haskell-mode go-mode slime helm helm-projectile
-                           w3m exec-path-from-shell))
+                           w3m exec-path-from-shell
+                           writeroom-mode))
 (defvar *font-family* (if (is-osx)
                           "Monaco-18"
                         "DejaVu Sans Mono-12"))
@@ -150,6 +151,11 @@
   (setq gofmt-command "gofmt")
   (add-hook 'before-save-hook 'gofmt-before-save))
 
+(defun init-python-mode ()
+  (require 'python-mode)
+  (setq python-shell-interpreter "ipython3"
+        python-shell-interpreter-args "-i"))
+
 (defun init-helm-mode ()
   (require 'helm)
   (require 'helm-config)
@@ -181,12 +187,12 @@
 
 (cl-defun init-writeroom-mode ()
   (setq writeroom-width 100
-        writeroom-major-modes '(c++-mode c-mode
-                                         java-mode
-                                         haskell-mode
-                                         lisp-mode
-                                         gnus-summary-mode gnus-group-mode gnus-article-mode
-                                         text-mode)
+        writeroom-major-modes '(c++-mode
+                                c-mode
+                                java-mode
+                                haskell-mode
+                                lisp-mode
+                                text-mode)
         writeroom-mode-line 't)
 
   (global-writeroom-mode 1))
@@ -217,6 +223,7 @@
 (init-clisp-mode)
 (init-haskell-mode)
 (init-go-mode)
+(init-python-mode)
 (init-helm-mode)
 (init-magit-mode)
 (init-writeroom-mode)
