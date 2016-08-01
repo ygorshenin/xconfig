@@ -45,10 +45,10 @@
     (with-current-buffer smtpmail-text-buffer (change-smtp)))
 (ad-activate 'smtpmail-via-smtp)
 
-(setq gnus-posting-styles *posting-styles*)
-
 (setq user-full-name *full-name*
       nntp-authinfo-file *authinfo*
+
+      gnus-posting-styles *posting-styles*
 
       ;;; Foo and bar are used here because I'm using only two gmail
       ;;; accounts in gnus.
@@ -64,6 +64,7 @@
                                               (nnir-search-engine imap)))
 
       gnus-thread-sort-functions '(gnus-thread-sort-by-number (not gnus-thread-sort-by-date))
+      gnus-group-sort-function 'gnus-group-sort-by-server
 
       gnus-sum-thread-tree-false-root ""
       gnus-sum-thread-tree-false-root "▷ "
@@ -77,7 +78,6 @@
 
       gnus-summary-display-arrow t
       gnus-summary-line-format "%0{%U%R%z%}%3{│%} %1{%d%} %3{│%}  %4{%-20,20f%}  %3{│%} %1{%B%}%s\n"
-
 
       gnus-group-line-format "%M\%S\%p\%P\%5y: %(%-40,40G%)\n"
       gnus-topic-line-format "%i %A: %(%{%n%}%) %v\n"
@@ -93,3 +93,4 @@
   (setq mml2015-signers (list *signature*)
         mml2015-encrypt-to-self t)
   (add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime))
+

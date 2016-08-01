@@ -62,6 +62,18 @@
     (when background
       (customize-set-variable 'frame-background-mode background))))
 
+(cl-defun rename-file-and-buffer (new-name)
+  "Renames both current buffer and file it's visiting to NEW-NAME."
+  (interactive "sNew name: ")
+  (let ((name (buffer-name))
+        (filename (buffer-file-name)))
+    (if (not filename)
+        (message "Buffer '%s' is not visiting a file!" name)
+      (if (get-buffer new-name)
+          (message "A buffer named '%s' already exists!" new-name)
+        (progn (rename-file filename new-name 1)
+               (rename-buffer new-name))))))
+
 (add-to-list 'exec-path "/usr/local/bin")
 (add-to-list 'exec-path "~/bin")
 
@@ -197,6 +209,15 @@
 
   (global-writeroom-mode 1))
 
+(cl-defun init-bbdb ()
+  (require 'bbdb)
+  (bbdb-initialize 'gnus 'message)
+  (bbdb-insinuate-message)
+  (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus))
+
+(cl-defun init-doc-view ()
+  (setq doc-view-resolution 300))
+
 (defun switch-color-theme ()
   (interactive)
   (let ((curr-theme (get-curr-color-theme *color-themes*))
@@ -227,6 +248,8 @@
 (init-helm-mode)
 (init-magit-mode)
 (init-writeroom-mode)
+(init-bbdb)
+(init-doc-view)
 
 (when window-system
   (add-to-list 'default-frame-alist `(font . ,*font-family*))
