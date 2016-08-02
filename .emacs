@@ -213,7 +213,6 @@
 (cl-defun init-bbdb ()
   (require 'bbdb)
   (bbdb-initialize 'gnus 'message)
-  (bbdb-mua-auto-update-init 'gnus 'message)
   (bbdb-insinuate-message)
   (setq bbdb-mua-update-interactive-p '(query . create))
   (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus))
