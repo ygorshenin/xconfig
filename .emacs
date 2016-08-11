@@ -157,7 +157,8 @@
   (require 'haskell-mode)
   (add-hook 'haskell-mode-hook (lambda ()
                                  (turn-on-haskell-indent)
-                                 (define-key haskell-mode-map (kbd "C-c C-c") 'recompile))))
+                                 (define-key haskell-mode-map (kbd "C-c C-c") 'recompile)))
+  (custom-set-variables '(haskell-process-type 'stack-ghci)))
 
 (defun init-go-mode ()
   (require 'go-mode)
