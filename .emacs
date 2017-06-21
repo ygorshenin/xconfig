@@ -10,13 +10,14 @@
                            bbdb))
 (defvar *font-family* (if (is-osx)
                           "Monaco-18"
-                        "DejaVu Sans Mono-12"))
+                        "Inconsolata-12"))
 
 (defvar *browser-program* (if (is-osx) "open" "google-chrome"))
 
 (cl-defstruct theme name (background-mode nil))
 
 (defvar *color-themes* (list (make-theme :name 'zenburn :background-mode 'nil)
+                             (make-theme :name 'nzenburn :background-mode 'nil)
                              (make-theme :name 'solarized-dark :background-mode 'dark)
                              (make-theme :name 'solarized-light :background-mode 'light)
                              (make-theme :name 'sanityinc-solarized-dark :background-mode 'dark)
@@ -86,7 +87,6 @@
   (when (is-osx)
     (exec-path-from-shell-initialize))
   (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                           ("marmalade" . "http://marmalade-repo.org/packages/")
                            ("melpa" . "https://melpa.org/packages/"))))
 
 (defun download-packages ()
@@ -136,10 +136,6 @@
   (require 'clang-format)
   (require 'google-c-style)
 
-  ; On Debian I prefer to use custom clang-format build.
-  (unless (is-osx)
-    (setq clang-format-executable "~/coding/llvm-cmake-build/bin/clang-format"))
-
   (add-hook 'c-mode-common-hook 'google-set-c-style)
   (add-hook 'c-mode-common-hook 'google-make-newline-indent)
 
@@ -166,11 +162,13 @@
   (add-hook 'before-save-hook 'gofmt-before-save))
 
 (defun init-python-mode ()
+  (require 'ein)
   (require 'python-mode)
   (setq python-shell-interpreter "ipython3"
         python-shell-interpreter-args "-i"))
 
 (defun init-helm-mode ()
+  (require 'dash)
   (require 'helm)
   (require 'helm-config)
   (global-set-key (kbd "C-c h") 'helm-command-prefix)
@@ -204,11 +202,12 @@
         writeroom-major-modes '(c++-mode
                                 c-mode
                                 java-mode
+                                python-mode
                                 haskell-mode
                                 lisp-mode
                                 text-mode)
-        writeroom-mode-line 't)
-
+        writeroom-mode-line 't
+        writeroom-major-modes-exceptions '(magit-popup-mode magit-log-mode compilation-mode))
   (global-writeroom-mode 1))
 
 (cl-defun init-bbdb ()

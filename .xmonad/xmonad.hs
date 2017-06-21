@@ -1,5 +1,6 @@
 import Data.Char (toLower)
 import System.IO
+import Text.Printf
 import XMonad
 import XMonad.Actions.SpawnOn
 import XMonad.Hooks.DynamicLog
@@ -20,17 +21,21 @@ switchVolume :: MonadIO m => VolumeCommand -> m ()
 switchVolume cmd = spawn $ "~/bin/volume-switch" ++ " " ++ arg
   where arg = map toLower $ show cmd
 
-codeWorkspaces, webWorkspaces, genericWorkspaces, mediaWorkspaces, myWorkspaces :: [String]
-codeWorkspaces    = ["0x1:code", "0x2:code"]
-webWorkspaces     = ["0x3:web"]
-genericWorkspaces = map (\d -> "0x" ++ (show d) ++ ":generic") [4..8]
+
+emacsWorkspace = "0x1:code"
+shellWorkspace = "0x2:code"
+webWorkspace   = "0x3:web"
+
+codeWorkspaces    = [emacsWorkspace, shellWorkspace]
+genericWorkspaces = map (printf "0x%d:generic") ([4 .. 8] :: [Int])
 mediaWorkspaces   = ["0x9:media"]
-myWorkspaces = concat [codeWorkspaces, webWorkspaces, genericWorkspaces, mediaWorkspaces]
+myWorkspaces = concat [codeWorkspaces, [webWorkspace], genericWorkspaces, mediaWorkspaces]
 
 onStartup = do
   setWMName "LG3D"  -- need for correct Java Swing applications work
-  spawnOn (head codeWorkspaces) "emacs"
-  spawnOn (head webWorkspaces) "google-chrome"
+  spawnOn emacsWorkspace "emacs"
+  spawnOn shellWorkspace "xterm"
+  spawnOn webWorkspace "google-chrome"
 
 main = do
   xmobar <- spawnPipe "xmobar"

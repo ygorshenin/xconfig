@@ -1,5 +1,5 @@
 #!/bin/bash
 
-dmenu_font="${dmenu_font:-xft:Droid Sans Mono:size=11:antialias=true}"
+dmenu_font="${dmenu_font:-xft:Inconsolata:size=10:antialias=true}"
 
 /usr/local/bin/dmenu_run -fn "$dmenu_font" -nb black

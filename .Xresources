@@ -1,3 +1,10 @@
+! Fonts
+Xft.antialias: true
+Xft.hinting:   true
+Xft.rgba:      rgb
+Xft.hintstyle: hintfull
+Xft.dpi:       220
+
 *customization: -color
 XTerm*termName: xterm-256color
 
@@ -7,7 +14,7 @@ xterm*saveLines: 2000
 xterm*charClass: 33:48,35:48,37:48,43:48,45-47:48,64:48,95:48,126:48
 xterm*eightBitInput: false
 
-xterm*faceName: Droid Sans Mono
+xterm*faceName: Inconsolata
 xterm*faceSize: 12
 
 ! Solarized color scheme for the X Window System
