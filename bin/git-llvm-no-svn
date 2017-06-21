@@ -21,7 +21,7 @@ check_directory() {
 }
 
 update_repository() {
-    local directory="$0"
+    local directory="$1"
     check_directory "$directory"
     (
         cd "$directory"
@@ -91,6 +91,7 @@ if [ ! -z "$repository_directory" ]; then
     set -e
     set -x
 
+    cd "$repository_directory"
     update_repository "."
     update_repository "tools/clang"
     update_repository "projects/compiler-rt"

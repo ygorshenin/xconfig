@@ -4,7 +4,7 @@ readonly LINUX_QMAKE_PATH="$HOME/Qt/5.5/gcc_64/bin/qmake"
 readonly MACX_QMAKE_PATH="$HOME/Qt/5.5/clang_64/bin/qmake"
 
 case $(uname) in
-    Linux) SPEC=linux-clang-libc++
+    Linux) SPEC=${SPEC:-linux-clang-libc++}
 
            if [ -x "$LINUX_QMAKE_PATH" ]
            then
@@ -17,7 +17,7 @@ case $(uname) in
                     QMAKE_LFLAGS*="-lprofiler" \
                     "$@"
            ;;
-   Darwin) SPEC=macx-clang
+   Darwin) SPEC=${SPEC:-macx-clang}
 
            if [ -x "$MACX_QMAKE_PATH" ]
            then
