@@ -17,7 +17,6 @@
 (cl-defstruct theme name (background-mode nil))
 
 (defvar *color-themes* (list (make-theme :name 'zenburn :background-mode 'nil)
-                             (make-theme :name 'nzenburn :background-mode 'nil)
                              (make-theme :name 'solarized-dark :background-mode 'dark)
                              (make-theme :name 'solarized-light :background-mode 'light)
                              (make-theme :name 'sanityinc-solarized-dark :background-mode 'dark)
@@ -154,6 +153,7 @@
   (add-hook 'haskell-mode-hook (lambda ()
                                  (turn-on-haskell-indent)
                                  (define-key haskell-mode-map (kbd "C-c C-c") 'recompile)))
+  (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
   (custom-set-variables '(haskell-process-type 'stack-ghci)))
 
 (defun init-go-mode ()

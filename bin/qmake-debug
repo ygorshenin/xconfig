@@ -1,21 +1,15 @@
 #!/bin/bash
 
-readonly LINUX_QMAKE_PATH="$HOME/Qt/5.5/gcc_64/bin/qmake"
 readonly MACX_QMAKE_PATH="$HOME/Qt/5.5/clang_64/bin/qmake"
 
 case $(uname) in
     Linux) SPEC=${SPEC:-linux-clang-libc++}
 
-           if [ -x "$LINUX_QMAKE_PATH" ]
-           then
-               QMAKE="$LINUX_QMAKE_PATH"
-           fi
-
            set -e -x
-           "$QMAKE" -spec "$SPEC" CONFIG+=debug \
-                    DEFINES+=USE_GOOGLE_PROFILER \
-                    QMAKE_LFLAGS*="-lprofiler" \
-                    "$@"
+           qmake -spec "$SPEC" CONFIG+=debug \
+                 DEFINES+=USE_GOOGLE_PROFILER \
+                 QMAKE_LFLAGS*="-lprofiler" \
+                 "$@"
            ;;
    Darwin) SPEC=${SPEC:-macx-clang}
 
