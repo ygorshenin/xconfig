@@ -1,5 +1,5 @@
 #!/bin/bash
 
-dmenu_font="${dmenu_font:-xft:Inconsolata:size=10:antialias=true}"
+dmenu_font="xft:DejaVu Sans Mono:size=8:bold:antialias=true"
 
-/usr/local/bin/dmenu_run -fn "$dmenu_font" -nb black
+/usr/bin/dmenu_run -fn "$dmenu_font" -nb black

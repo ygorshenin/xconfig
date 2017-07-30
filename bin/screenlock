@@ -14,12 +14,11 @@ if ! exists xscreensaver-command ; then
     exit -1
 fi
 
-setxkbmap -layout us
+setxkbmap us
 
 LAYOUT=/tmp/.layout
 if [ -p "$LAYOUT" ]; then
-    echo "en" >"$LAYOUT" &
+    echo "us" >"$LAYOUT" &
 fi
 
-setxkbmap -layout us,ru
-xscreensaver-command -lock >/dev/null 2>&1 && exit
+xscreensaver-command -lock >/dev/null 2>&1
