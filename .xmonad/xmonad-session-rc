@@ -1,5 +1,12 @@
 #!/bin/bash
- 
+
+spawn_pipe() {
+    local pipe="$1"
+    rm -rf "${pipe}"
+    mkfifo "${pipe}"
+    echo "--" >"${pipe}" &
+}
+
 # Load resources
 xrdb -merge .Xresources
  
@@ -13,13 +20,6 @@ fi
 xscreensaver -no-splash &
 xfce4-power-manager &
 redshift -l 55.751244:37.618423 -t 5700:3500 -b 1.0:0.8 &
-
-function  spawn_pipe() {
-    local pipe="$1"
-    rm -rf "${pipe}"
-    mkfifo "${pipe}"
-    echo "--" >"${pipe}" &
-}
 
 spawn_pipe "/tmp/.layout"
 spawn_pipe "/tmp/.volume"

@@ -1,0 +1,68 @@
+#!/bin/bash
+
+usage() {
+    echo "Usage: $0 [-v|--verbose] [-h|--help]"
+    echo "Options:"
+    echo "--verbose          show all actions"
+    echo "--help             show this help message"
+}
+
+verbose=
+help=
+
+process_opts() {
+    for opt in "$@"; do
+        case "$opt" in
+            -v|--verbose)
+                verbose=true
+                ;;
+            -h|--help)
+                help=true
+                ;;
+            --)
+                break
+                ;;
+            -*|--*)
+                echo "Unknown option: $opt" >&2
+                echo "Better safe than sorry, aborted." >&2
+                exit -1
+                ;;
+            *)
+                break
+        esac
+    done
+}
+
+log() {
+    local level="$1"
+    local message="$2"
+    case "$level" in
+        info)
+            if [ ! -z "$verbose" ]; then
+                echo "INFO: $message" >&1
+            fi
+            ;;
+        error)
+            echo "ERROR: $message" >&2
+            ;;
+        *)
+            echo "Unknown level: $level"
+            ;;
+    esac
+}
+
+process_opts $@
+
+ROOT_DIR=$(dirname "$(realpath $0)")
+HOME_DIR=/tmp
+
+if [ ! -z "$help" ]; then
+    usage
+    exit 0
+fi
+
+for item in .xmonad .xmobarrc .Xresources .emacs bin
+do
+    log info "Installing $item..."
+    ln -s "$ROOT_DIR/$item" "$HOME_DIR/$item"
+done
