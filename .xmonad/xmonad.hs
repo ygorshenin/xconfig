@@ -56,7 +56,7 @@ main = do
                , terminal    = "xterm"
                } `additionalKeys`
     [ ((controlMask, xK_Shift_L), switchLayout)
-    , ((mod4Mask .|. shiftMask, xK_l), spawn "screenlock")
+    , ((mod4Mask .|. shiftMask, xK_l), spawn "xscreensaver-command -lock")
     , ((mod4Mask .|. shiftMask, xK_g), spawn "google-chrome-stable")
     , ((mod4Mask, xK_Print), spawn "scrot ~/Pictures/screen-%Y-%m-%d-%H-%M-%S.png -d 1")
     , ((mod4Mask .|. controlMask, xK_Print), spawn "scrot ~/Pictures/window-%Y-%m-%d-%H-%M-%S.png -u -d 1")

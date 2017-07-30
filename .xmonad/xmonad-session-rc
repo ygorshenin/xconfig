@@ -19,6 +19,7 @@ if [ -f "${WALLPAPER}" ]; then
 fi
 xscreensaver -no-splash &
 xfce4-power-manager &
+screenlock-daemon &
 redshift -l 55.751244:37.618423 -t 5700:3500 -b 1.0:0.8 &
 
 spawn_pipe "/tmp/.layout"

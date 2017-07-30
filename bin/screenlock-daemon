@@ -1,0 +1,35 @@
+#!/bin/bash
+
+LAYOUT=/tmp/.layout
+LAST_LAYOUT=
+
+set_layout() {
+    layout="$1"
+
+    if [ -z "$layout" ]
+    then
+        return
+    fi
+
+    if [ -p "$LAYOUT" ]
+    then
+        echo "$layout" >"$LAYOUT" &
+    fi
+
+    setxkbmap "$layout"
+}
+
+xscreensaver-command -watch |
+while read line
+do
+    if echo "$line" | grep -q '^\(BLANK\|LOCK\)'
+    then
+        LAST_LAYOUT=$(setxkbmap -query | awk '/layout:.*/ { print $2 }')
+        set_layout "us"
+    fi
+
+    if echo "$line" | grep -q '^UNBLANK'
+    then
+        set_layout "$LAST_LAYOUT"
+    fi
+done
