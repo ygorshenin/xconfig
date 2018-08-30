@@ -4,6 +4,7 @@
 (package-initialize)
 (when (is-osx)
   (exec-path-from-shell-initialize))
+(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -21,6 +22,8 @@
 (cl-defstruct theme name (background-mode nil))
 
 (defvar *color-themes* (list (make-theme :name 'zenburn :background-mode 'nil)
+                             (make-theme :name 'solarized-dark :background-mode 'dark)
+                             (make-theme :name 'solarized-light :background-mode 'light)
                              (make-theme :name 'sanityinc-solarized-dark :background-mode 'dark)
                              (make-theme :name 'sanityinc-solarized-light :background-mode 'light))
   "A list of my favourite color themes.")
