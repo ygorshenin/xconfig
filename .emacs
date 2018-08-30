@@ -1,7 +1,17 @@
-(require 'cl)
+; Initialization of packages system
+(defun is-osx () (string= "darwin" system-type))
 
-(cl-defun is-osx () (string= "darwin" system-type))
+(package-initialize)
+(when (is-osx)
+  (exec-path-from-shell-initialize))
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 
+(use-package cl :ensure t)
+
+; Rest of the config
 (defvar *font-family* (if (is-osx)
                           "Monaco-18"
                         "Inconsolata-12"))
@@ -73,15 +83,6 @@
 (when (is-osx)
   (setq mac-allow-anti-aliasing t))
 
-(cl-defun init-packages ()
-  (package-initialize)
-  (when (is-osx)
-    (exec-path-from-shell-initialize))
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-  (unless (package-installed-p 'use-package)
-    (package-refresh-contents)
-    (package-install 'use-package)))
-
 (cl-defun switch-to-shell ()
   "Switches to shell buffer"
   (interactive)
@@ -116,7 +117,7 @@
   (use-package clang-format :ensure t)
   (use-package google-c-style
     :ensure t
-    :config
+    :init
     (add-hook 'c-mode-common-hook 'google-set-c-style)
     (add-hook 'c-mode-common-hook 'google-make-newline-indent))
 
@@ -184,17 +185,18 @@
 
   (use-package helm
     :ensure t
+    :init
+    (setq helm-display-header-line nil
+          helm-split-window-in-side-p t)
+    :config
+    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+    (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+    (helm-mode 1)
     :bind (("C-c h" . helm-command-prefix)
            ("M-x" . helm-M-x)
            ("M-y" . helm-show-kill-ring)
            ("C-x b" . helm-mini)
-           ("C-x C-f" . helm-find-files))
-    :config
-    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
-    (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
-    (setq helm-display-header-line nil
-          helm-split-window-in-side-p t)
-    (helm-mode 1))
+           ("C-x C-f" . helm-find-files)))
 
   (global-unset-key (kbd "C-x c"))
 
@@ -210,9 +212,6 @@
 
   (use-package helm-projectile
     :ensure t
-    :bind (("C-c p f" . helm-projectile-find-file)
-           ("C-c p s g" . helm-projectile-grep)
-           ("C-c p a" . helm-projectile-switch-project))
     :config
     (helm-projectile-on)))
 
@@ -224,7 +223,7 @@
 (cl-defun init-writeroom-mode ()
   (use-package writeroom-mode
     :ensure t
-    :config
+    :init
     (setq writeroom-width 100
           writeroom-major-modes '(c++-mode
                                   c-mode
@@ -235,15 +234,17 @@
                                   text-mode)
           writeroom-mode-line 't
           writeroom-major-modes-exceptions '(magit-popup-mode magit-log-mode compilation-mode))
+    :config
     (global-writeroom-mode 1)))
 
 (cl-defun init-bbdb ()
   (use-package bbdb
     :ensure t
+    :init
+    (setq bbdb-mua-update-interactive-p '(query . create))
     :config
     (bbdb-initialize 'gnus 'message)
     (bbdb-insinuate-message)
-    (setq bbdb-mua-update-interactive-p '(query . create))
     (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)))
 
 (cl-defun init-doc-view ()
@@ -270,7 +271,6 @@
   (tool-bar-mode -1))
 
 (setq inhibit-splash-screen t)
-(init-packages)
 (init-common-edit-mode)
 (init-common-coding-mode)
 (init-clisp-mode)
