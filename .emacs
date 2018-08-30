@@ -11,8 +11,6 @@
 (cl-defstruct theme name (background-mode nil))
 
 (defvar *color-themes* (list (make-theme :name 'zenburn :background-mode 'nil)
-                             (make-theme :name 'solarized-dark :background-mode 'dark)
-                             (make-theme :name 'solarized-light :background-mode 'light)
                              (make-theme :name 'sanityinc-solarized-dark :background-mode 'dark)
                              (make-theme :name 'sanityinc-solarized-light :background-mode 'light))
   "A list of my favourite color themes.")
@@ -79,7 +77,10 @@
   (package-initialize)
   (when (is-osx)
     (exec-path-from-shell-initialize))
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t))
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package)))
 
 (cl-defun switch-to-shell ()
   "Switches to shell buffer"
@@ -256,8 +257,9 @@
     (enable-color-theme next-theme)))
 
 (cl-defun init-color-theme ()
-  (require 'color-theme)
-  (require 'color-theme-sanityinc-solarized)
+  (use-package color-theme :ensure t)
+  (use-package color-theme-sanityinc-solarized :ensure t)
+  (use-package color-theme-solarized :ensure t)
   (enable-color-theme (second *color-themes*))
   (global-set-key (kbd "<f11>") 'switch-color-theme))
 
