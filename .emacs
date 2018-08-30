@@ -1,13 +1,7 @@
 (require 'cl)
 
-(defun is-osx () (string= "darwin" system-type))
+(cl-defun is-osx () (string= "darwin" system-type))
 
-(defvar *packages* '(magit color-theme color-theme-solarized color-theme-sanityinc-solarized
-                           clang-format google-c-style
-                           haskell-mode go-mode slime helm helm-projectile
-                           w3m exec-path-from-shell
-                           writeroom-mode
-                           bbdb))
 (defvar *font-family* (if (is-osx)
                           "Monaco-18"
                         "Inconsolata-12"))
@@ -81,23 +75,13 @@
 (when (is-osx)
   (setq mac-allow-anti-aliasing t))
 
-(defun init-packages ()
+(cl-defun init-packages ()
   (package-initialize)
   (when (is-osx)
     (exec-path-from-shell-initialize))
-  (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                           ("melpa" . "https://melpa.org/packages/"))))
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t))
 
-(defun download-packages ()
-  "Downloads all necessary packages."
-  (interactive)
-  (package-refresh-contents)
-  (dolist (package *packages*)
-    (unless (package-installed-p package)
-      (message "Installing %s" package)
-      (package-install package))))
-
-(defun switch-to-shell ()
+(cl-defun switch-to-shell ()
   "Switches to shell buffer"
   (interactive)
   (let* ((buffer-names (mapcar #'buffer-name (buffer-list)))
@@ -109,7 +93,7 @@
            (pop-to-buffer shell-name))
           (t (shell)))))
 
-(defun init-common-edit-mode ()
+(cl-defun init-common-edit-mode ()
   (transient-mark-mode 1)
   (global-hl-line-mode 't)
   (setq-default indent-tabs-mode nil)
@@ -118,155 +102,166 @@
         compilation-scroll-output 'first-error
         browse-url-browser-function 'browse-url-generic
         browse-url-generic-program *browser-program*)
-  (put 'upcase-region 'disabled nil)
-  (global-set-key (kbd "C-c C-l") 'sort-lines)
-  (global-set-key (kbd "C-c l") 'sort-lines)
-  (global-set-key (kbd "C-c C-p") 'switch-to-shell)
-  (global-set-key (kbd "C-c p") 'switch-to-shell))
+  (put 'upcase-region 'disabled nil))
 
-(defun customize-common-coding-mode-map (mode-map)
+(cl-defun customize-common-coding-mode-map (mode-map)
   (define-key mode-map (kbd "C-c C-c") 'recompile)
-  (define-key mode-map (kbd "C-c C-p") 'switch-to-shell)
-  (define-key mode-map (kbd "C-c p") 'switch-to-shell)
   (define-key mode-map (kbd "C-c C-r") 'clang-format-region)
-  (define-key mode-map (kbd "C-c C-f") 'clang-format-buffer))
+  (define-key mode-map (kbd "C-c C-f") 'clang-format-buffer)
+  (define-key mode-map (kbd "C-c C-l") 'sort-lines)
+  (define-key mode-map (kbd "C-c l") 'sort-lines))
 
-(defun init-common-coding-mode ()
-  (require 'clang-format)
-  (require 'google-c-style)
-
-  (add-hook 'c-mode-common-hook 'google-set-c-style)
-  (add-hook 'c-mode-common-hook 'google-make-newline-indent)
+(cl-defun init-common-coding-mode ()
+  (use-package clang-format :ensure t)
+  (use-package google-c-style
+    :ensure t
+    :config
+    (add-hook 'c-mode-common-hook 'google-set-c-style)
+    (add-hook 'c-mode-common-hook 'google-make-newline-indent))
 
   (add-hook 'c-mode-hook (lambda () (customize-common-coding-mode-map c-mode-map)))
   (add-hook 'c++-mode-hook (lambda () (customize-common-coding-mode-map c++-mode-map)))
   (add-hook 'java-mode-hook (lambda () (customize-common-coding-mode-map java-mode-map)))
 
   (use-package irony
-               :ensure t
-               :defer t
-               :init
-               (add-hook 'c++-mode-hook 'irony-mode)
-               (add-hook 'c-mode-hook 'irony-mode)
-               :config
-               ;; replace the `completion-at-point' and `complete-symbol' bindings in
-               ;; irony-mode's buffers by irony-mode's function
-               (defun my-irony-mode-hook ()
-                 (define-key irony-mode-map [remap completion-at-point]
-                   'irony-completion-at-point-async)
-                 (define-key irony-mode-map [remap complete-symbol]
-                   'irony-completion-at-point-async))
-               (add-hook 'irony-mode-hook 'my-irony-mode-hook)
-               (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+    :ensure t
+    :defer t
+    :init
+    (add-hook 'c++-mode-hook 'irony-mode)
+    (add-hook 'c-mode-hook 'irony-mode)
+    :config
+    ;; replace the `completion-at-point' and `complete-symbol' bindings in
+    ;; irony-mode's buffers by irony-mode's function
+    (cl-defun my-irony-mode-hook ()
+      (define-key irony-mode-map [remap completion-at-point]
+        'irony-completion-at-point-async)
+      (define-key irony-mode-map [remap complete-symbol]
+        'irony-completion-at-point-async))
+    (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
   (use-package company
-               :ensure t
-               :defer t
-               :init (add-hook 'after-init-hook 'global-company-mode)
-               :config
-               (use-package company-irony :ensure t :defer t)
-               (setq company-minimum-prefix-length   2
-                     company-show-numbers            t
-                     company-tooltip-limit           20
-                     company-dabbrev-downcase        nil
-                     company-backends                '((company-irony)))
-               :bind ("C-;" . company-complete-common)))
+    :ensure t
+    :defer t
+    :init
+    (add-hook 'after-init-hook 'global-company-mode)
+    :config
+    (use-package company-irony :ensure t :defer t)
+    (setq company-minimum-prefix-length   2
+          company-show-numbers            t
+          company-tooltip-limit           20
+          company-dabbrev-downcase        nil
+          company-backends                '((company-irony)))
+    :bind ("C-;" . company-complete-common)))
 
-(defun init-clisp-mode ()
-  (require 'slime)
-  (setq slime-lisp-implementations `((sbcl (,(if (is-osx) "/usr/local/bin/sbcl" "/usr/bin/sbcl")) :coding-system utf-8-unix))
-        common-lisp-hyperspec-root "/usr/share/doc/hyperspec/")
-  (global-set-key [(f2)] 'slime-hyperspec-lookup))
+(cl-defun init-clisp-mode ()
+  (use-package slime
+    :ensure t
+    :config
+    (setq slime-lisp-implementations `((sbcl (,(if (is-osx) "/usr/local/bin/sbcl" "/usr/bin/sbcl")) :coding-system utf-8-unix))
+          common-lisp-hyperspec-root "/usr/share/doc/hyperspec/")
+    :bind ([f2] . slime-hyperspec-lookup)))
 
-(defun init-haskell-mode ()
-  (require 'haskell-mode)
-  (add-hook 'haskell-mode-hook (lambda ()
-                                 (turn-on-haskell-indent)
-                                 (define-key haskell-mode-map (kbd "C-c C-c") 'recompile)))
-  (add-hook 'haskell-mode-hook 'interactive-haskell-mode))
+(cl-defun init-haskell-mode ()
+  (use-package haskell-mode
+    :ensure t
+    :config
+    (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+    (add-hook 'haskell-mode-hook (lambda ()
+                                   (interactive-haskell-mode)
+                                   (define-key interactive-haskell-mode-map (kbd "C-c C-c") 'recompile)))))
 
-(defun init-go-mode ()
-  (require 'go-mode)
-  (setq gofmt-command "goimports")
-  (add-hook 'before-save-hook 'gofmt-before-save)
+(cl-defun init-python-mode ()
+  (use-package python-mode
+    :init
+    (setq python-shell-interpreter "ipython3"
+          python-shell-interpreter-args "-i")
+    :ensure t))
 
-  (define-key go-mode-map (kbd "C-c C-c") 'recompile)
-  (define-key go-mode-map (kbd "C-c C-p") 'switch-to-shell)
-  (define-key go-mode-map (kbd "C-c p") 'switch-to-shell))
+(cl-defun init-helm-mode ()
+  (use-package dash :ensure t)
 
-(defun init-python-mode ()
-  (require 'ein)
-  (require 'python-mode)
-  (setq python-shell-interpreter "ipython3"
-        python-shell-interpreter-args "-i"))
-
-(defun init-helm-mode ()
-  (require 'dash)
-  (require 'helm)
-  (require 'helm-config)
-  (global-set-key (kbd "C-c h") 'helm-command-prefix)
-  (global-set-key (kbd "M-x") 'helm-M-x)
-  (global-set-key (kbd "M-y") 'helm-show-kill-ring)
-  (global-set-key (kbd "C-x b") 'helm-mini)
-  (global-set-key (kbd "C-x C-f") 'helm-find-files)
-
-  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
-  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+  (use-package helm
+    :ensure t
+    :bind (("C-c h" . helm-command-prefix)
+           ("M-x" . helm-M-x)
+           ("M-y" . helm-show-kill-ring)
+           ("C-x b" . helm-mini)
+           ("C-x C-f" . helm-find-files))
+    :config
+    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+    (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+    (setq helm-display-header-line nil
+          helm-split-window-in-side-p t)
+    (helm-mode 1))
 
   (global-unset-key (kbd "C-x c"))
 
-  (setq helm-display-header-line nil
-        helm-split-window-in-side-p t)
-  (helm-mode 1)
+  (use-package projectile
+    :ensure t
+    :init
+    (setq projectile-completion-system 'helm
+          projectile-use-git-grep t
+          projectile-enable-caching t
+          projectile-indexing-method 'native)
+    :config
+    (projectile-global-mode))
 
-  (projectile-global-mode)
-  (setq projectile-completion-system 'helm
-        projectile-use-git-grep t
-        projectile-enable-caching t
-        projectile-indexing-method 'native)
-  (helm-projectile-on))
+  (use-package helm-projectile
+    :ensure t
+    :bind (("C-c p f" . helm-projectile-find-file)
+           ("C-c p s g" . helm-projectile-grep)
+           ("C-c p a" . helm-projectile-switch-project))
+    :config
+    (helm-projectile-on)))
 
-(defun init-magit-mode ()
-  (require 'magit)
-  (global-set-key (kbd "C-c C-g") 'magit-status))
+(cl-defun init-magit-mode ()
+  (use-package magit
+    :ensure t
+    :bind ("C-c C-g" . magit-status)))
 
 (cl-defun init-writeroom-mode ()
-  (setq writeroom-width 100
-        writeroom-major-modes '(c++-mode
-                                c-mode
-                                java-mode
-                                python-mode
-                                haskell-mode
-                                lisp-mode
-                                text-mode)
-        writeroom-mode-line 't
-        writeroom-major-modes-exceptions '(magit-popup-mode magit-log-mode compilation-mode))
-  (global-writeroom-mode 1))
+  (use-package writeroom-mode
+    :ensure t
+    :config
+    (setq writeroom-width 100
+          writeroom-major-modes '(c++-mode
+                                  c-mode
+                                  java-mode
+                                  python-mode
+                                  haskell-mode
+                                  lisp-mode
+                                  text-mode)
+          writeroom-mode-line 't
+          writeroom-major-modes-exceptions '(magit-popup-mode magit-log-mode compilation-mode))
+    (global-writeroom-mode 1)))
 
 (cl-defun init-bbdb ()
-  (require 'bbdb)
-  (bbdb-initialize 'gnus 'message)
-  (bbdb-insinuate-message)
-  (setq bbdb-mua-update-interactive-p '(query . create))
-  (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus))
+  (use-package bbdb
+    :ensure t
+    :config
+    (bbdb-initialize 'gnus 'message)
+    (bbdb-insinuate-message)
+    (setq bbdb-mua-update-interactive-p '(query . create))
+    (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)))
 
 (cl-defun init-doc-view ()
   (setq doc-view-resolution 300))
 
-(defun switch-color-theme ()
+(cl-defun switch-color-theme ()
   (interactive)
   (let ((curr-theme (get-curr-color-theme *color-themes*))
         (next-theme (get-next-color-theme *color-themes*)))
     (disable-color-theme curr-theme)
     (enable-color-theme next-theme)))
 
-(defun init-color-theme ()
+(cl-defun init-color-theme ()
   (require 'color-theme)
   (require 'color-theme-sanityinc-solarized)
   (enable-color-theme (second *color-themes*))
   (global-set-key (kbd "<f11>") 'switch-color-theme))
 
-(defun init-fullscreen ()
+(cl-defun init-fullscreen ()
   (set-frame-parameter nil 'fullscreen 'fullboth)
   (scroll-bar-mode -1)
   (menu-bar-mode -1)
@@ -278,7 +273,6 @@
 (init-common-coding-mode)
 (init-clisp-mode)
 (init-haskell-mode)
-(init-go-mode)
 (init-python-mode)
 (init-helm-mode)
 (init-magit-mode)
@@ -293,3 +287,17 @@
   (init-color-theme))
 
 (shell)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (writeroom-mode use-package slime projectile magit helm google-c-style company-irony clang-format))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
