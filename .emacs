@@ -140,8 +140,9 @@
     (add-hook 'c++-mode-hook #'ycmd-mode)
     (add-hook 'c-mode-hook #'ycmd-mode)
     :config
-    (set-variable 'ycmd-server-command '("/usr/bin/python" "/home/vi002/ycmd/ycmd"))
-    (set-variable 'ycmd-extra-conf-whitelist '("/home/vi002/coding/*")))
+    (set-variable 'ycmd-server-command (list "/usr/bin/python" (file-truename "~/ycmd/ycmd")))
+    (set-variable 'ycmd-global-config (file-truename "~/.ycm_extra_conf.py"))
+    (set-variable 'ycmd-extra-conf-whitelist (list (file-truename "~/coding/*"))))
 
   (use-package company-ycmd
     :ensure t
