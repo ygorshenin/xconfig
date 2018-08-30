@@ -10,8 +10,7 @@ Config { font = "xft:DejaVu Sans Mono:size=8:bold:antialias=true"
                     , Run Swap [] 10
                     , Run Date "%a %b %_d %l:%M %p" "date" 10
                     , Run StdinReader
-		    , Run Wireless "wlan0" ["-L","33","-H","66","--normal","yellow","--high","green"] 10
-                    , Run Network "eth0" [] 10
+                    , Run Wireless "wlp4s0" ["-L","33","-H","66","--normal","yellow","--high","green"] 10
                     , Run PipeReader "/tmp/.layout" "layout"
                     , Run PipeReader "/tmp/.volume" "sound"
                     , Run BatteryP ["BAT0", "BAT1"]
@@ -19,5 +18,5 @@ Config { font = "xft:DejaVu Sans Mono:size=8:bold:antialias=true"
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %cpu% * %memory% * %swap% | Vol: %sound% | %eth0% wlan0: %wlan0wi% | %battery% | %layout% | <fc=#ee9a00>%date%</fc>"
+       , template = "%StdinReader% }{ %cpu% * %memory% * %swap% | Vol: %sound% | WiFi: %wlp4s0wi% | %battery% | %layout% | <fc=#ee9a00>%date%</fc>"
        }

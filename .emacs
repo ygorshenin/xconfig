@@ -140,7 +140,37 @@
 
   (add-hook 'c-mode-hook (lambda () (customize-common-coding-mode-map c-mode-map)))
   (add-hook 'c++-mode-hook (lambda () (customize-common-coding-mode-map c++-mode-map)))
-  (add-hook 'java-mode-hook (lambda () (customize-common-coding-mode-map java-mode-map))))
+  (add-hook 'java-mode-hook (lambda () (customize-common-coding-mode-map java-mode-map)))
+
+  (use-package irony
+               :ensure t
+               :defer t
+               :init
+               (add-hook 'c++-mode-hook 'irony-mode)
+               (add-hook 'c-mode-hook 'irony-mode)
+               :config
+               ;; replace the `completion-at-point' and `complete-symbol' bindings in
+               ;; irony-mode's buffers by irony-mode's function
+               (defun my-irony-mode-hook ()
+                 (define-key irony-mode-map [remap completion-at-point]
+                   'irony-completion-at-point-async)
+                 (define-key irony-mode-map [remap complete-symbol]
+                   'irony-completion-at-point-async))
+               (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+               (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+  (use-package company
+               :ensure t
+               :defer t
+               :init (add-hook 'after-init-hook 'global-company-mode)
+               :config
+               (use-package company-irony :ensure t :defer t)
+               (setq company-minimum-prefix-length   2
+                     company-show-numbers            t
+                     company-tooltip-limit           20
+                     company-dabbrev-downcase        nil
+                     company-backends                '((company-irony)))
+               :bind ("C-;" . company-complete-common)))
 
 (defun init-clisp-mode ()
   (require 'slime)
@@ -153,13 +183,16 @@
   (add-hook 'haskell-mode-hook (lambda ()
                                  (turn-on-haskell-indent)
                                  (define-key haskell-mode-map (kbd "C-c C-c") 'recompile)))
-  (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-  (custom-set-variables '(haskell-process-type 'stack-ghci)))
+  (add-hook 'haskell-mode-hook 'interactive-haskell-mode))
 
 (defun init-go-mode ()
   (require 'go-mode)
-  (setq gofmt-command "gofmt")
-  (add-hook 'before-save-hook 'gofmt-before-save))
+  (setq gofmt-command "goimports")
+  (add-hook 'before-save-hook 'gofmt-before-save)
+
+  (define-key go-mode-map (kbd "C-c C-c") 'recompile)
+  (define-key go-mode-map (kbd "C-c C-p") 'switch-to-shell)
+  (define-key go-mode-map (kbd "C-c p") 'switch-to-shell))
 
 (defun init-python-mode ()
   (require 'ein)
