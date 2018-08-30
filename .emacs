@@ -125,36 +125,27 @@
   (add-hook 'c++-mode-hook (lambda () (customize-common-coding-mode-map c++-mode-map)))
   (add-hook 'java-mode-hook (lambda () (customize-common-coding-mode-map java-mode-map)))
 
-  (use-package irony
-    :ensure t
-    :defer t
-    :init
-    (add-hook 'c++-mode-hook 'irony-mode)
-    (add-hook 'c-mode-hook 'irony-mode)
-    :config
-    ;; replace the `completion-at-point' and `complete-symbol' bindings in
-    ;; irony-mode's buffers by irony-mode's function
-    (cl-defun my-irony-mode-hook ()
-      (define-key irony-mode-map [remap completion-at-point]
-        'irony-completion-at-point-async)
-      (define-key irony-mode-map [remap complete-symbol]
-        'irony-completion-at-point-async))
-    (add-hook 'irony-mode-hook 'my-irony-mode-hook)
-    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
-
   (use-package company
     :ensure t
-    :defer t
-    :init
-    (add-hook 'after-init-hook 'global-company-mode)
+    :diminish company-mode
+    :init (global-company-mode t)
     :config
-    (use-package company-irony :ensure t :defer t)
-    (setq company-minimum-prefix-length   2
-          company-show-numbers            t
-          company-tooltip-limit           20
-          company-dabbrev-downcase        nil
-          company-backends                '((company-irony)))
-    :bind ("C-;" . company-complete-common)))
+    (setq company-idle-delay 0
+          company-minimum-prefix-length 2
+          company-tooltip-limit 20))
+
+  (use-package ycmd
+    :ensure t
+    :init
+    (add-hook 'c++-mode-hook #'ycmd-mode)
+    (add-hook 'c-mode-hook #'ycmd-mode)
+    :config
+    (set-variable 'ycmd-server-command '("/usr/bin/python" "/home/vi002/ycmd/ycmd"))
+    (set-variable 'ycmd-extra-conf-whitelist '("/home/vi002/coding/*")))
+
+  (use-package company-ycmd
+    :ensure t
+    :init (company-ycmd-setup)))
 
 (cl-defun init-clisp-mode ()
   (use-package slime
