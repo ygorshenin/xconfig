@@ -208,7 +208,8 @@
           projectile-enable-caching t
           projectile-indexing-method 'native)
     :config
-    (projectile-global-mode))
+    (projectile-global-mode)
+    :bind-keymap ("C-c p" . projectile-command-map))
 
   (use-package helm-projectile
     :ensure t
