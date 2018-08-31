@@ -133,7 +133,7 @@
     :diminish company-mode
     :init (global-company-mode t)
     :config
-    (setq company-idle-delay 0
+    (setq company-idle-delay 0.5
           company-minimum-prefix-length 2
           company-tooltip-limit 20))
 
@@ -214,7 +214,9 @@
 (cl-defun init-magit-mode ()
   (use-package magit
     :ensure t
-    :bind ("C-c C-g" . magit-status)))
+    :bind ("C-c C-g" . magit-status))
+  (use-package magit-svn
+    :ensure t))
 
 (cl-defun init-writeroom-mode ()
   (use-package writeroom-mode
@@ -285,3 +287,17 @@
   (init-color-theme))
 
 (shell)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (magit-svn writeroom-mode use-package slime python-mode magit helm-projectile haskell-mode google-c-style evil-unimpaired company-ycmd clang-format bbdb))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
