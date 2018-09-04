@@ -222,7 +222,7 @@
   (use-package writeroom-mode
     :ensure t
     :init
-    (setq writeroom-width 100
+    (setq writeroom-width 120
           writeroom-major-modes '(c++-mode
                                   c-mode
                                   java-mode
