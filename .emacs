@@ -131,11 +131,13 @@
   (use-package company
     :ensure t
     :diminish company-mode
-    :init (global-company-mode t)
+    :init (add-hook 'after-init-hook 'global-company-mode)
     :config
     (setq company-idle-delay 0.5
           company-minimum-prefix-length 2
-          company-tooltip-limit 20))
+          company-show-numbers t
+          company-tooltip-limit 10)
+    :bind ("C-;" . company-complete-common))
 
   (use-package ycmd
     :ensure t
@@ -173,7 +175,15 @@
     :init
     (setq python-shell-interpreter "ipython3"
           python-shell-interpreter-args "-i")
-    :ensure t))
+    :ensure t)
+
+  (use-package elpy
+    :ensure t
+    :init
+    (setq elpy-rpc-python-command "python3")
+    :config
+    (elpy-enable)
+    (add-to-list 'company-backend 'elpy-company-backend)))
 
 (cl-defun init-helm-mode ()
   (use-package dash :ensure t)
