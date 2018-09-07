@@ -107,14 +107,14 @@
         compilation-scroll-output 'first-error
         browse-url-browser-function 'browse-url-generic
         browse-url-generic-program *browser-program*)
-  (put 'upcase-region 'disabled nil))
+  (put 'upcase-region 'disabled nil)
+  (global-set-key (kbd "C-c C-l") 'sort-lines)
+  (global-set-key (kbd "C-c l") 'sort-lines))
 
 (cl-defun customize-common-coding-mode-map (mode-map)
   (define-key mode-map (kbd "C-c C-c") 'recompile)
   (define-key mode-map (kbd "C-c C-r") 'clang-format-region)
-  (define-key mode-map (kbd "C-c C-f") 'clang-format-buffer)
-  (define-key mode-map (kbd "C-c C-l") 'sort-lines)
-  (define-key mode-map (kbd "C-c l") 'sort-lines))
+  (define-key mode-map (kbd "C-c C-f") 'clang-format-buffer))
 
 (cl-defun init-common-coding-mode ()
   (use-package clang-format :ensure t)
