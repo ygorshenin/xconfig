@@ -151,7 +151,12 @@
 
   (use-package company-ycmd
     :ensure t
-    :init (company-ycmd-setup)))
+    :init (company-ycmd-setup))
+
+  (use-package eldoc
+    :ensure t
+    :diminish eldoc-mode
+    :init (add-hook 'ycmd-mode-hook 'ycmd-eldoc-setup)))
 
 (cl-defun init-clisp-mode ()
   (use-package slime
