@@ -274,6 +274,7 @@
   (use-package color-theme :ensure t)
   (use-package color-theme-sanityinc-solarized :ensure t)
   (use-package color-theme-solarized :ensure t)
+  (use-package solarized-theme :ensure t)
   (enable-color-theme (second *color-themes*))
   (global-set-key (kbd "<f11>") 'switch-color-theme))
 
