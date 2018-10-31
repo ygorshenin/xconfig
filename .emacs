@@ -149,6 +149,10 @@
     (set-variable 'ycmd-global-config (file-truename "~/.ycm_extra_conf.py"))
     (set-variable 'ycmd-extra-conf-whitelist (list (file-truename "~/coding/*"))))
 
+  (use-package helm-ag
+    :ensure t
+    :init (setq helm-ag-insert-at-point 'symbol))
+
   (use-package company-ycmd
     :ensure t
     :init (company-ycmd-setup)))
