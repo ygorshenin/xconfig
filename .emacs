@@ -155,7 +155,12 @@
 
   (use-package company-ycmd
     :ensure t
-    :init (company-ycmd-setup)))
+    :init (company-ycmd-setup))
+
+  (use-package eldoc
+    :ensure t
+    :diminish eldoc-mode
+    :init (add-hook 'ycmd-mode-hook 'ycmd-eldoc-setup)))
 
 (cl-defun init-clisp-mode ()
   (use-package slime
@@ -273,6 +278,8 @@
   (use-package color-theme :ensure t)
   (use-package color-theme-sanityinc-solarized :ensure t)
   (use-package color-theme-solarized :ensure t)
+  (use-package solarized-theme :ensure t)
+  (use-package zenburn-theme :ensure t)
   (enable-color-theme (second *color-themes*))
   (global-set-key (kbd "<f11>") 'switch-color-theme))
 
