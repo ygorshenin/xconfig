@@ -139,13 +139,17 @@
           company-tooltip-limit 10)
     :bind ("C-;" . company-complete-common))
 
+  (with-eval-after-load 'company
+    (define-key company-active-map (kbd "C-n") (lambda () (interactive) (company-complete-common-or-cycle 1)))
+    (define-key company-active-map (kbd "C-p") (lambda () (interactive) (company-complete-common-or-cycle -1))))
+
   (use-package ycmd
     :ensure t
     :init
     (add-hook 'c++-mode-hook #'ycmd-mode)
     (add-hook 'c-mode-hook #'ycmd-mode)
     :config
-    (set-variable 'ycmd-server-command (list "/usr/bin/python" (file-truename "~/ycmd/ycmd")))
+    (set-variable 'ycmd-server-command (list "/usr/bin/python3" (file-truename "~/ycmd/ycmd")))
     (set-variable 'ycmd-global-config (file-truename "~/.ycm_extra_conf.py"))
     (set-variable 'ycmd-extra-conf-whitelist (list (file-truename "~/coding/*"))))
 
@@ -322,3 +326,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(put 'downcase-region 'disabled nil)
