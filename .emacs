@@ -13,9 +13,7 @@
 (use-package cl :ensure t)
 
 ; Rest of the config
-(defvar *font-family* (if (is-osx)
-                          "Monaco-18"
-                        "Inconsolata-12"))
+(defvar *font-family* (if (is-osx) "Monaco-18" "Inconsolata-16"))
 
 (defvar *browser-program* (if (is-osx) "open" "google-chrome"))
 
@@ -139,13 +137,17 @@
           company-tooltip-limit 10)
     :bind ("C-;" . company-complete-common))
 
+  (with-eval-after-load 'company
+    (define-key company-active-map (kbd "C-n") (lambda () (interactive) (company-complete-common-or-cycle 1)))
+    (define-key company-active-map (kbd "C-p") (lambda () (interactive) (company-complete-common-or-cycle -1))))
+
   (use-package ycmd
     :ensure t
     :init
     (add-hook 'c++-mode-hook #'ycmd-mode)
     (add-hook 'c-mode-hook #'ycmd-mode)
     :config
-    (set-variable 'ycmd-server-command (list "/usr/bin/python" (file-truename "~/ycmd/ycmd")))
+    (set-variable 'ycmd-server-command (list "/usr/bin/python3" (file-truename "~/ycmd/ycmd")))
     (set-variable 'ycmd-global-config (file-truename "~/.ycm_extra_conf.py"))
     (set-variable 'ycmd-extra-conf-whitelist (list (file-truename "~/coding/*"))))
 
@@ -275,11 +277,7 @@
     (enable-color-theme next-theme)))
 
 (cl-defun init-color-theme ()
-  (use-package color-theme :ensure t)
-  (use-package color-theme-sanityinc-solarized :ensure t)
-  (use-package color-theme-solarized :ensure t)
-  (use-package solarized-theme :ensure t)
-  (use-package zenburn-theme :ensure t)
+  (use-package color-theme-modern :ensure t)
   (enable-color-theme (second *color-themes*))
   (global-set-key (kbd "<f11>") 'switch-color-theme))
 
@@ -322,3 +320,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(put 'downcase-region 'disabled nil)
