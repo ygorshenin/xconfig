@@ -13,9 +13,7 @@
 (use-package cl :ensure t)
 
 ; Rest of the config
-(defvar *font-family* (if (is-osx)
-                          "Monaco-18"
-                        "Inconsolata-12"))
+(defvar *font-family* (if (is-osx) "Monaco-18" "Inconsolata-16"))
 
 (defvar *browser-program* (if (is-osx) "open" "google-chrome"))
 
@@ -279,11 +277,7 @@
     (enable-color-theme next-theme)))
 
 (cl-defun init-color-theme ()
-  (use-package color-theme :ensure t)
-  (use-package color-theme-sanityinc-solarized :ensure t)
-  (use-package color-theme-solarized :ensure t)
-  (use-package solarized-theme :ensure t)
-  (use-package zenburn-theme :ensure t)
+  (use-package color-theme-modern :ensure t)
   (enable-color-theme (second *color-themes*))
   (global-set-key (kbd "<f11>") 'switch-color-theme))
 
